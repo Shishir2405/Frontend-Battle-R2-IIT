@@ -1,436 +1,355 @@
 import React, { useState, useEffect, useRef } from "react";
+import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import {
-  motion,
-  useScroll,
-  useTransform,
-  useSpring,
-  useInView,
-} from "framer-motion";
-import {
-  MousePointer,
-  Heart,
-  Zap,
-  Eye,
-  Brain,
-  Fingerprint,
-  Sparkles,
   ArrowRight,
-  Play,
+  Sparkles,
+  Code,
+  Database,
+  User,
+  Award,
 } from "lucide-react";
 
-const BlackTransitionSection = () => {
+const MinimalBlackSection = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [activeWord, setActiveWord] = useState(0);
+  const [activeSkill, setActiveSkill] = useState(0);
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: false, amount: 0.3 });
 
   const { scrollY } = useScroll();
-
-  // Enhanced parallax effects
-  const textY = useTransform(scrollY, [500, 1500], [100, -200]);
-  const dotsY = useTransform(scrollY, [500, 1500], [0, -150]);
-  const backgroundY = useTransform(scrollY, [500, 1500], [0, 100]);
-  const orbsY = useTransform(scrollY, [500, 1500], [0, -80]);
-
-  // Smooth spring animations
-  const smoothMouseX = useSpring(0, { stiffness: 50, damping: 20 });
-  const smoothMouseY = useSpring(0, { stiffness: 50, damping: 20 });
+  const y = useTransform(scrollY, [0, 1000], [0, -50]);
 
   useEffect(() => {
     const updateMousePosition = (e) => {
-      const centerX = window.innerWidth / 2;
-      const centerY = window.innerHeight / 2;
-
       setMousePosition({ x: e.clientX, y: e.clientY });
-      smoothMouseX.set((e.clientX - centerX) * 0.02);
-      smoothMouseY.set((e.clientY - centerY) * 0.02);
     };
 
     window.addEventListener("mousemove", updateMousePosition);
     return () => window.removeEventListener("mousemove", updateMousePosition);
-  }, [smoothMouseX, smoothMouseY]);
+  }, []);
 
-  // Auto-cycle through highlighted words
+  // Auto-cycle through skills
   useEffect(() => {
     if (!isInView) return;
 
     const interval = setInterval(() => {
-      setActiveWord((prev) => (prev + 1) % 6);
-    }, 2000);
+      setActiveSkill((prev) => (prev + 1) % 4);
+    }, 2500);
 
     return () => clearInterval(interval);
   }, [isInView]);
 
-  const morphingShapes = [
+  const skills = [
     {
-      id: 1,
-      path: "M20,20 Q50,10 80,20 T140,20 Q170,30 200,20 L200,80 Q170,70 140,80 T80,80 Q50,90 20,80 Z",
-    },
-    {
-      id: 2,
-      path: "M20,30 Q60,5 100,30 Q140,55 180,30 Q200,50 180,70 Q140,45 100,70 Q60,95 20,70 Q0,50 20,30 Z",
-    },
-    {
-      id: 3,
-      path: "M30,20 Q70,0 110,20 Q150,40 190,20 Q210,60 190,80 Q150,60 110,80 Q70,100 30,80 Q10,40 30,20 Z",
-    },
-  ];
-
-  const interactiveElements = [
-    {
-      icon: <Eye className="w-8 h-8" />,
-      label: "Visual",
+      icon: <Code className="w-5 h-5" />,
+      title: "Full Stack",
+      description: "Development",
       color: "from-blue-400 to-cyan-500",
-      description: "Schöne Ästhetik",
     },
     {
-      icon: <Brain className="w-8 h-8" />,
-      label: "Mental",
+      icon: <Database className="w-5 h-5" />,
+      title: "Data Science",
+      description: "Analytics",
       color: "from-purple-400 to-violet-500",
-      description: "Intuitive Logik",
     },
     {
-      icon: <Fingerprint className="w-8 h-8" />,
-      label: "Tactile",
-      color: "from-pink-400 to-rose-500",
-      description: "Fühlbare Reaktion",
-    },
-    {
-      icon: <Heart className="w-8 h-8" />,
-      label: "Emotional",
+      icon: <User className="w-5 h-5" />,
+      title: "Cyber Security",
+      description: "Protection",
       color: "from-red-400 to-orange-500",
-      description: "Echte Verbindung",
     },
     {
-      icon: <Zap className="w-8 h-8" />,
-      label: "Dynamic",
-      color: "from-yellow-400 to-orange-500",
-      description: "Lebendige Energie",
-    },
-    {
-      icon: <Sparkles className="w-8 h-8" />,
-      label: "Magic",
+      icon: <Award className="w-5 h-5" />,
+      title: "Project",
+      description: "Management",
       color: "from-green-400 to-emerald-500",
-      description: "Überraschende Momente",
     },
-  ];
-
-  const highlightWords = [
-    "Bewegungen",
-    "Übergänge",
-    "Reaktionen",
-    "Gefühl",
-    "Erlebnis",
-    "Magie",
   ];
 
   return (
-    <>
-      <style jsx>{`
-        .gradient-text {
-          background: linear-gradient(
-            135deg,
-            #ffffff 0%,
-            #f0f0f0 50%,
-            #ffffff 100%
-          );
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
+    <section
+      ref={sectionRef}
+      className="min-h-screen bg-black flex items-center relative overflow-hidden"
+    >
+      {/* Subtle floating particles */}
+      <div className="absolute inset-0">
+        {[...Array(8)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 bg-white/20 rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              y: [0, -80, 0],
+              opacity: [0, 0.6, 0],
+              scale: [0, 1, 0],
+            }}
+            transition={{
+              duration: 8 + Math.random() * 4,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: Math.random() * 8,
+            }}
+          />
+        ))}
+      </div>
 
-        .morphing-blob {
-          filter: blur(1px) contrast(20);
-        }
-
-        .text-reveal {
-          background: linear-gradient(
-            90deg,
-            transparent 0%,
-            #fff 50%,
-            transparent 100%
-          );
-          background-size: 200% 100%;
-          -webkit-background-clip: text;
-          background-clip: text;
-          animation: shimmer 3s infinite;
-        }
-
-        @keyframes shimmer {
-          0% {
-            background-position: -200% 0;
-          }
-          100% {
-            background-position: 200% 0;
-          }
-        }
-
-        .floating-text {
-          animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-          0%,
-          100% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: translateY(-20px);
-          }
-        }
-      `}</style>
-
-      <section
-        ref={sectionRef}
-        className="h-screen bg-black flex items-center justify-center relative overflow-hidden"
-      >
-        {/* Dynamic morphing background */}
-        <motion.div className="absolute inset-0" style={{ y: backgroundY }}>
-          {/* Animated mesh gradient */}
-          <div className="absolute inset-0 opacity-20">
-            <svg className="w-full h-full" viewBox="0 0 800 600">
-              <defs>
-                <radialGradient id="meshGrad1" cx="50%" cy="50%">
-                  <stop offset="0%" stopColor="#4338ca" stopOpacity="0.6" />
-                  <stop offset="100%" stopColor="transparent" />
-                </radialGradient>
-                <radialGradient id="meshGrad2" cx="50%" cy="50%">
-                  <stop offset="0%" stopColor="#7c3aed" stopOpacity="0.4" />
-                  <stop offset="100%" stopColor="transparent" />
-                </radialGradient>
-              </defs>
-
-              {morphingShapes.map((shape, index) => (
-                <motion.path
-                  key={shape.id}
-                  d={shape.path}
-                  fill={`url(#meshGrad${(index % 2) + 1})`}
-                  className="morphing-blob"
-                  animate={{
-                    d: morphingShapes.map((s) => s.path),
-                  }}
-                  transition={{
-                    duration: 8,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: index * 2,
-                  }}
-                  style={{
-                    transform: `translate(${
-                      smoothMouseX.get() * (index + 1) * 5
-                    }px, ${smoothMouseY.get() * (index + 1) * 5}px)`,
-                  }}
-                />
-              ))}
-            </svg>
-          </div>
-
-          {/* Particle system */}
-          {[...Array(20)].map((_, i) => (
+      {/* Main content */}
+      <div className="max-w-7xl mx-auto px-8 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          {/* Left side - Text content */}
+          <motion.div
+            className="space-y-8"
+            style={{ y }}
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1 }}
+          >
+            {/* Small header */}
             <motion.div
-              key={i}
-              className="absolute w-1 h-1 bg-white/30 rounded-full"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-              }}
-              animate={{
-                y: [0, -100, 0],
-                x: [0, Math.random() * 50 - 25, 0],
-                opacity: [0, 1, 0],
-                scale: [0, Math.random() * 2 + 1, 0],
-              }}
-              transition={{
-                duration: 8 + Math.random() * 4,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: Math.random() * 8,
-              }}
-            />
-          ))}
-        </motion.div>
-
-        {/* Main content grid */}
-        <div className="max-w-7xl mx-auto px-8 relative z-10">
-          <div className="grid grid-cols-12 gap-8 items-center h-screen">
-            {/* Left side - Interactive elements */}
-            <motion.div
-              className="col-span-3 space-y-6"
-              initial={{ opacity: 0, x: -100 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1, delay: 0.2 }}
-              style={{
-                x: smoothMouseX,
-                y: smoothMouseY,
-              }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="flex items-center space-x-2"
             >
-              {/* Rotating text */}
-              <motion.div
-                className="transform -rotate-90 origin-left mb-20"
-                animate={{ rotateZ: isInView ? -90 : -45 }}
-                transition={{ duration: 1 }}
-              >
-                <span className="text-white/60 text-sm font-mono tracking-[0.4em] uppercase floating-text">
-                  Ein Klick mit Wirkung
-                </span>
-              </motion.div>
+              <div className="w-8 h-px bg-gradient-to-r from-yellow-400 to-orange-500" />
+              <span className="text-white/60 text-sm font-mono tracking-wider uppercase">
+                Best Learning Experience
+              </span>
             </motion.div>
 
-            {/* Center - Main content with advanced animations */}
-            <motion.div className="col-span-6 text-center" style={{ y: textY }}>
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 1.2, delay: 0.4 }}
-                className="mb-16"
-              >
-                {/* Advanced animated heading */}
-                <h2 className="text-4xl md:text-6xl lg:text-7xl font-black mb-8 leading-tight">
-                  <motion.span
-                    className="block gradient-text"
-                    initial={{ opacity: 0, y: 100 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 1, delay: 0.6 }}
-                  >
-                    We Provide Best
-                  </motion.span>
-                  <motion.span
-                    className="block bg-gradient-to-r from-yellow-400 via-orange-400 to-yellow-400 bg-clip-text text-transparent"
-                    initial={{ opacity: 0, y: 100 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 1, delay: 0.8 }}
-                  >
-                    internship For You
-                  </motion.span>
-                </h2>
-
-                {/* Dynamic text with word highlighting */}
-                <motion.div
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1, delay: 1.2 }}
-                  className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-12"
-                >
-               
-                  <span>
-                    At INLIGHN TECH, we believe that the future of education
-                    lies in bridging the gap between academic learning and
-                    industry needs. Founded with a passion for providing
-                    meaningful and immersive learning experiences, we offer
-                    internship programs that equip students and young
-                    professionals with practical skills in Full Stack
-                    Development, Data Science, and Project Management.{" "}
-                  </span>
-                 
-                </motion.div>
-              </motion.div>
+            {/* Main heading */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+            >
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">
+                We Provide Best{" "}
+                <span className="bg-gradient-to-r from-yellow-400 via-orange-400 to-yellow-400 bg-clip-text text-transparent">
+                  Internship
+                </span>{" "}
+                For You
+              </h2>
             </motion.div>
 
-            {/* ight side - More interactive elements */}
-            <motion.div
-              className="col-span-3 flex flex-col items-end space-y-6"
-              initial={{ opacity: 0, x: 100 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1, delay: 0.2 }}
-              style={{
-                x: smoothMouseX,
-                y: smoothMouseY,
-              }}
+            {/* Description */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="text-gray-300 text-lg leading-relaxed max-w-xl"
             >
-              {/* Progress indicator with animation */}
-              <div className="flex flex-col items-center space-y-4">
-                <motion.span
-                  className="text-white/60 text-sm font-mono tracking-wider uppercase"
-                  animate={{ opacity: [0.6, 1, 0.6] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                >
-                  Standard
-                </motion.span>
+              At INLIGHN TECH, we bridge the gap between academic learning and
+              industry needs with immersive internship programs.
+            </motion.p>
 
-                <div className="w-px h-40 bg-gradient-to-b from-transparent via-white/40 to-transparent relative">
+            {/* CTA Button */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+            >
+              <motion.button
+                className="bg-white text-black px-6 py-3 rounded-full font-semibold flex items-center space-x-2 hover:bg-gray-100 transition-colors"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <span>Explore Programs</span>
+                <ArrowRight className="w-4 h-4" />
+              </motion.button>
+            </motion.div>
+          </motion.div>
+
+          {/* Right side - Interactive skills showcase */}
+          <motion.div
+            className="relative flex justify-center items-center"
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 0.3 }}
+          >
+            {/* Central core */}
+            <div className="relative">
+              <motion.div
+                className="w-32 h-32 bg-gradient-to-br from-yellow-400/20 to-orange-500/20 rounded-full flex items-center justify-center backdrop-blur-sm border border-white/10"
+                animate={{
+                  scale: [1, 1.05, 1],
+                  rotate: [0, 180, 360],
+                }}
+                transition={{
+                  scale: { duration: 2, repeat: Infinity },
+                  rotate: { duration: 20, repeat: Infinity, ease: "linear" },
+                }}
+              >
+                <Sparkles className="w-8 h-8 text-yellow-400" />
+              </motion.div>
+
+              {/* Orbiting skill cards */}
+              {skills.map((skill, index) => {
+                const angle = index * 90 + Date.now() * 0.0005 * (index + 1);
+                const radius = 120;
+                const x = Math.cos(angle) * radius;
+                const y = Math.sin(angle) * radius;
+
+                return (
                   <motion.div
-                    className="absolute left-0 w-px bg-gradient-to-b from-yellow-400 to-orange-500"
-                    initial={{ height: 0, top: "50%" }}
-                    whileInView={{ height: "60%", top: "20%" }}
-                    transition={{ duration: 2, delay: 1 }}
-                  />
-                </div>
-
-                <div className="flex flex-col space-y-2">
-                  {[...Array(25)].map((_, i) => (
+                    key={index}
+                    className="absolute"
+                    style={{
+                      left: `calc(50% + ${x}px)`,
+                      top: `calc(50% + ${y}px)`,
+                      transform: "translate(-50%, -50%)",
+                    }}
+                    animate={{
+                      scale: activeSkill === index ? 1.1 : 1,
+                      opacity: activeSkill === index ? 1 : 0.7,
+                    }}
+                    transition={{ duration: 0.3 }}
+                  >
                     <motion.div
-                      key={i}
-                      className="w-2 h-1 rounded-full"
-                      initial={{ backgroundColor: "rgba(255, 255, 255, 0.2)" }}
+                      className={`w-20 h-20 bg-gradient-to-br ${skill.color} rounded-2xl flex flex-col items-center justify-center p-3 shadow-lg backdrop-blur-sm border border-white/20`}
+                      whileHover={{ scale: 1.1, y: -5 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <div className="text-white mb-1">{skill.icon}</div>
+                      <div className="text-xs text-white font-semibold text-center leading-tight">
+                        <div>{skill.title}</div>
+                        <div className="text-white/80">{skill.description}</div>
+                      </div>
+                    </motion.div>
+                  </motion.div>
+                );
+              })}
+
+              {/* Connection lines */}
+              <svg className="absolute inset-0 w-full h-full pointer-events-none">
+                {skills.map((_, index) => {
+                  const angle = index * 90 + Date.now() * 0.0005 * (index + 1);
+                  const radius = 120;
+                  const x1 = Math.cos(angle) * 60 + 128;
+                  const y1 = Math.sin(angle) * 60 + 128;
+                  const x2 = Math.cos(angle) * radius + 128;
+                  const y2 = Math.sin(angle) * radius + 128;
+
+                  return (
+                    <motion.line
+                      key={index}
+                      x1={x1}
+                      y1={y1}
+                      x2={x2}
+                      y2={y2}
+                      stroke="rgba(255, 255, 255, 0.1)"
+                      strokeWidth="1"
+                      initial={{ pathLength: 0 }}
                       animate={{
-                        backgroundColor:
-                          i < 15
-                            ? "rgba(255, 193, 7, 0.8)"
-                            : "rgba(255, 255, 255, 0.2)",
-                        scale: i < 15 ? [1, 1.2, 1] : 1,
+                        pathLength: activeSkill === index ? 1 : 0.3,
+                        stroke:
+                          activeSkill === index
+                            ? "rgba(255, 193, 7, 0.5)"
+                            : "rgba(255, 255, 255, 0.1)",
                       }}
-                      transition={{
-                        duration: 0.1,
-                        delay: i * 0.05,
-                        scale: {
-                          duration: 1,
-                          repeat: Infinity,
-                          delay: i * 0.1,
-                        },
-                      }}
+                      transition={{ duration: 0.5 }}
                     />
-                  ))}
-                </div>
+                  );
+                })}
+              </svg>
+            </div>
 
-                <div className="w-px h-40 bg-gradient-to-b from-transparent via-white/40 to-transparent" />
-
-
-              </div>
-
-   
-            </motion.div>
-          </div>
-        </div>
-
-        {/* Advanced floating orbs system */}
-        <motion.div
-          className="absolute inset-0 pointer-events-none"
-          style={{ y: orbsY }}
-        >
-          {[...Array(12)].map((_, i) => (
+            {/* Floating info cards */}
             <motion.div
-              key={i}
-              className="absolute"
-              style={{
-                left: `${10 + Math.random() * 80}%`,
-                top: `${10 + Math.random() * 80}%`,
-              }}
+              className="absolute top-0 right-0 bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20"
               animate={{
-                x: [0, Math.random() * 100 - 50, 0],
-                y: [0, Math.random() * 100 - 50, 0],
-                scale: [0, Math.random() * 1.5 + 0.5, 0],
-                opacity: [0, 0.6, 0],
+                y: [0, -10, 0],
+                opacity: [0.8, 1, 0.8],
               }}
               transition={{
-                duration: 6 + Math.random() * 6,
+                duration: 3,
                 repeat: Infinity,
                 ease: "easeInOut",
-                delay: Math.random() * 10,
               }}
             >
-              <div
-                className={`w-2 h-2 rounded-full bg-gradient-to-br ${interactiveElements[
-                  i % interactiveElements.length
-                ].color
-                  .replace("from-", "from-")
-                  .replace("to-", "to-")} blur-sm`}
-              />
+              <div className="text-white text-sm">
+                <div className="font-semibold">500+</div>
+                <div className="text-white/60">Students</div>
+              </div>
             </motion.div>
-          ))}
-        </motion.div>
-      </section>
-    </>
+
+            <motion.div
+              className="absolute bottom-0 left-0 bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20"
+              animate={{
+                y: [0, 10, 0],
+                opacity: [0.8, 1, 0.8],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 1.5,
+              }}
+            >
+              <div className="text-white text-sm">
+                <div className="font-semibold">100%</div>
+                <div className="text-white/60">Job Ready</div>
+              </div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Progress indicator on the right */}
+      <motion.div
+        className="fixed right-8 top-1/2 transform -translate-y-1/2 z-20"
+        initial={{ opacity: 0, x: 50 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        transition={{ delay: 1 }}
+      >
+        <div className="flex flex-col items-center space-y-4">
+          <span className="text-white/60 text-xs font-mono tracking-wider uppercase rotate-90 origin-center whitespace-nowrap">
+            Standard
+          </span>
+
+          <div className="w-px h-32 bg-gradient-to-b from-transparent via-white/30 to-transparent relative">
+            <motion.div
+              className="absolute left-0 w-px bg-gradient-to-b from-yellow-400 to-orange-500"
+              initial={{ height: 0, top: "50%" }}
+              whileInView={{ height: "60%", top: "20%" }}
+              transition={{ duration: 2, delay: 1.5 }}
+            />
+          </div>
+
+          <div className="flex flex-col space-y-1">
+            {[...Array(15)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="w-1 h-1 rounded-full"
+                initial={{ backgroundColor: "rgba(255, 255, 255, 0.2)" }}
+                animate={{
+                  backgroundColor:
+                    i < 10
+                      ? "rgba(255, 193, 7, 0.8)"
+                      : "rgba(255, 255, 255, 0.2)",
+                  scale: i < 10 ? [1, 1.5, 1] : 1,
+                }}
+                transition={{
+                  delay: i * 0.1,
+                  scale: {
+                    duration: 2,
+                    repeat: Infinity,
+                    delay: i * 0.1,
+                  },
+                }}
+              />
+            ))}
+          </div>
+
+          <span className="text-white/60 text-xs font-mono tracking-wider uppercase rotate-90 origin-center whitespace-nowrap">
+            Excellence
+          </span>
+        </div>
+      </motion.div>
+    </section>
   );
 };
 
-export default BlackTransitionSection;
+export default MinimalBlackSection;

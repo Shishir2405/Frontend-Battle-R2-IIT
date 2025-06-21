@@ -7,6 +7,11 @@ import {
   Users,
   Award,
   TrendingUp,
+  Briefcase,
+  GraduationCap,
+  Target,
+  Code,
+  ChevronRight,
 } from "lucide-react";
 
 const TestimonialSection = () => {
@@ -17,22 +22,22 @@ const TestimonialSection = () => {
   useEffect(() => {
     const autoStart = setTimeout(() => {
       setIsPlaying(true);
-    }, 800);
+    }, 1000);
     return () => clearTimeout(autoStart);
   }, []);
 
   useEffect(() => {
     if (isPlaying) {
-      const timings = [3000, 2000, 3500, 2500, 4000];
+      const timings = [3500, 2500, 4000, 3000, 5000];
       const timer = setTimeout(() => {
         if (currentStep < 5) {
           setCurrentStep(currentStep + 1);
         } else {
           setIsPlaying(false);
           setCurrentStep(0);
-          setTimeout(() => setIsPlaying(true), 1000);
+          setTimeout(() => setIsPlaying(true), 1500);
         }
-      }, timings[currentStep] || 2500);
+      }, timings[currentStep] || 3000);
       return () => clearTimeout(timer);
     }
   }, [currentStep, isPlaying]);
@@ -44,52 +49,61 @@ const TestimonialSection = () => {
 
   const testimonials = [
     {
-      name: "Marcus Weber",
-      role: "Geschäftsführer, TechStartup",
-      company: "innovateGmbH",
+      name: "Alex Johnson",
+      role: "Software Engineer",
+      company: "Google",
       quote:
-        "Eduard hat unsere Conversion Rate um 240% gesteigert. Seine Webflow-Entwicklung ist einfach brillant – jede Animation sitzt perfekt.",
-      image: "👨‍💼",
-      stats: { metric: "240%", label: "Conversion Rate" },
+        "INLIGHN TECH's internship program transformed my career. The hands-on projects and mentorship prepared me perfectly for the tech industry.",
+      image:
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face&auto=format",
+      stats: { metric: "95%", label: "Job Placement" },
       color: "from-purple-200 to-purple-400",
+      icon: <Code className="w-5 h-5" />,
     },
     {
-      name: "Sarah Müller",
-      role: "Marketing Direktorin",
-      company: "DesignStudio Nord",
+      name: "Priya Sharma",
+      role: "Data Scientist",
+      company: "Microsoft",
       quote:
-        "Die Website, die Eduard für uns entwickelt hat, ist ein Kunstwerk. Unsere Kunden sind begeistert von der User Experience.",
-      image: "👩‍💻",
-      stats: { metric: "95%", label: "Kundenzufriedenheit" },
+        "The data science program exceeded my expectations. Real-world projects and industry mentors made all the difference in my learning journey.",
+      image:
+        "https://images.unsplash.com/photo-1494790108755-2616b612b5a1?w=150&h=150&fit=crop&crop=face&auto=format",
+      stats: { metric: "100%", label: "Skill Growth" },
       color: "from-pink-200 to-pink-400",
+      icon: <TrendingUp className="w-5 h-5" />,
     },
     {
-      name: "Thomas Klein",
-      role: "E-Commerce Manager",
-      company: "Online Ventures",
+      name: "David Chen",
+      role: "Full Stack Developer",
+      company: "Amazon",
       quote:
-        "Seit dem Relaunch mit Eduard verkaufen wir 3x mehr. Seine strategische Herangehensweise ist beeindruckend.",
-      image: "👨‍🚀",
-      stats: { metric: "300%", label: "Umsatzsteigerung" },
+        "From zero to hero! The comprehensive curriculum and practical approach helped me land my dream job in just 6 months.",
+      image:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face&auto=format",
+      stats: { metric: "6 months", label: "To Dream Job" },
       color: "from-orange-200 to-orange-400",
+      icon: <Target className="w-5 h-5" />,
     },
   ];
 
   const achievements = [
     {
-      icon: <Award className="w-6 h-6" />,
-      number: "50+",
-      label: "Erfolgreiche Projekte",
+      icon: <GraduationCap className="w-7 h-7" />,
+      number: "500+",
+      label: "Students Trained",
+      description: "Successfully completed programs",
     },
     {
-      icon: <Users className="w-6 h-6" />,
-      number: "100%",
-      label: "Kundenzufriedenheit",
+      icon: <Briefcase className="w-7 h-7" />,
+      number: "95%",
+      label: "Job Placement",
+      description: "Within 6 months of completion",
     },
     {
-      icon: <TrendingUp className="w-6 h-6" />,
-      number: "250%",
-      label: "Durchschnittliche ROI-Steigerung",
+      icon: <Award className="w-7 h-7" />,
+      number: "4.9/5",
+      label: "Student Rating",
+      description: "Average program satisfaction",
     },
   ];
 
@@ -101,40 +115,46 @@ const TestimonialSection = () => {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.7 }}
         onClick={resetDemo}
-        className="fixed bottom-6 right-6 z-40 px-6 py-3 rounded-2xl bg-white/80 backdrop-blur-xl border border-gray-200 hover:bg-white transition-all duration-300 text-gray-900 text-sm font-semibold flex items-center gap-2 shadow-lg"
+        className="fixed bottom-6 right-6 z-40 px-6 py-3 rounded-2xl bg-white/90 backdrop-blur-xl border border-gray-200 hover:bg-white transition-all duration-300 text-gray-900 text-sm font-semibold flex items-center gap-2 shadow-lg group"
         whileHover={{ scale: 1.05, y: -2 }}
         whileTap={{ scale: 0.95 }}
       >
-        <ArrowRight className="w-4 h-4" />
-        Story abspielen
+        <motion.div
+          animate={{ x: [0, 4, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+        >
+          <ArrowRight className="w-4 h-4" />
+        </motion.div>
+        <span>Play Story</span>
       </motion.button>
 
-      {/* Floating Background Elements */}
+      {/* Subtle floating elements */}
       <div className="absolute inset-0 overflow-hidden">
-        {[...Array(6)].map((_, i) => (
+        {[...Array(8)].map((_, i) => (
           <motion.div
             key={i}
-            className={`absolute w-32 h-32 opacity-5 ${
+            className={`absolute opacity-[0.03] ${
               i % 3 === 0
-                ? "bg-purple-300"
+                ? "w-24 h-24 bg-purple-400"
                 : i % 3 === 1
-                ? "bg-pink-300"
-                : "bg-orange-300"
+                ? "w-16 h-16 bg-pink-400"
+                : "w-20 h-20 bg-orange-400"
             } rounded-full blur-xl`}
             style={{
-              left: `${15 + i * 15}%`,
-              top: `${20 + i * 12}%`,
+              left: `${10 + i * 12}%`,
+              top: `${15 + i * 10}%`,
             }}
             animate={{
-              y: [0, -30, 0],
-              x: [0, 20, 0],
+              y: [0, -25, 0],
+              x: [0, 15, 0],
               scale: [1, 1.1, 1],
+              opacity: [0.03, 0.06, 0.03],
             }}
             transition={{
-              duration: 8 + i * 2,
+              duration: 12 + i * 2,
               repeat: Infinity,
               ease: "easeInOut",
-              delay: i * 1.5,
+              delay: i * 2,
             }}
           />
         ))}
@@ -144,44 +164,48 @@ const TestimonialSection = () => {
       <AnimatePresence>
         {currentStep === 0 && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            transition={{ duration: 1, ease: "easeOut" }}
+            exit={{ opacity: 0, scale: 1.05, y: -20 }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
             className="absolute inset-0 flex items-center justify-center z-10 px-8"
           >
-            <div className="text-center max-w-4xl">
+            <div className="text-center max-w-5xl">
               <motion.div
-                initial={{ y: -30, opacity: 0 }}
+                initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.3 }}
-                className="text-sm text-gray-600 mb-6 tracking-[0.3em] uppercase font-medium"
+                transition={{ delay: 0.3, duration: 0.8 }}
+                className="flex items-center justify-center gap-2 mb-8"
               >
-                ★ Kundenstimmen
+                <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                <span className="text-sm text-gray-600 tracking-[0.3em] uppercase font-medium">
+                  Student Success Stories
+                </span>
+                <Star className="w-4 h-4 text-yellow-500 fill-current" />
               </motion.div>
 
               <motion.h1
-                initial={{ y: 30, opacity: 0 }}
+                initial={{ y: 40, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.6 }}
-                className="text-6xl md:text-8xl lg:text-9xl font-black tracking-tight leading-none text-gray-900 mb-8"
+                transition={{ delay: 0.6, duration: 1 }}
+                className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-none text-gray-900 mb-6"
               >
-                Zufriedene
+                Amazing
               </motion.h1>
 
               <motion.h1
-                initial={{ y: 30, opacity: 0 }}
+                initial={{ y: 40, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.8 }}
-                className="text-6xl md:text-8xl lg:text-9xl font-black tracking-tight leading-none bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 bg-clip-text text-transparent mb-8"
+                transition={{ delay: 0.8, duration: 1 }}
+                className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-none bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 bg-clip-text text-transparent mb-8"
               >
-                Kunden
+                Transformations
               </motion.h1>
 
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.2 }}
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 1.2, duration: 0.6 }}
                 className="w-24 h-px bg-gradient-to-r from-transparent via-gray-400 to-transparent mx-auto"
               />
             </div>
@@ -195,19 +219,19 @@ const TestimonialSection = () => {
           <div className="absolute inset-0 flex items-center justify-center px-8 z-10">
             <motion.h1
               initial={{ x: 0 }}
-              animate={{ x: -200 }}
-              transition={{ duration: 1.5, ease: "easeInOut" }}
-              className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight leading-none text-gray-900 absolute"
+              animate={{ x: -180 }}
+              transition={{ duration: 1.8, ease: "easeInOut" }}
+              className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight leading-none text-gray-900 absolute"
             >
-              Zufriedene
+              Amazing
             </motion.h1>
             <motion.h1
               initial={{ x: 0 }}
-              animate={{ x: 200 }}
-              transition={{ duration: 1.5, ease: "easeInOut" }}
-              className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight leading-none bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 bg-clip-text text-transparent absolute"
+              animate={{ x: 180 }}
+              transition={{ duration: 1.8, ease: "easeInOut" }}
+              className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight leading-none bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 bg-clip-text text-transparent absolute"
             >
-              Kunden
+              Transformations
             </motion.h1>
           </div>
         )}
@@ -220,65 +244,100 @@ const TestimonialSection = () => {
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "-100%" }}
-            transition={{ duration: 1.2, ease: "easeInOut" }}
+            transition={{ duration: 1.4, ease: "easeInOut" }}
             className="absolute inset-0 flex items-center justify-center px-8 z-10"
           >
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.6, duration: 0.8 }}
+              transition={{ delay: 0.7, duration: 1 }}
               className="max-w-6xl flex flex-col lg:flex-row items-center gap-12"
             >
               {/* Large Quote Mark */}
               <motion.div
-                initial={{ scale: 0, rotate: -180 }}
+                initial={{ scale: 0, rotate: -90 }}
                 animate={{ scale: 1, rotate: 0 }}
-                transition={{ delay: 0.8, duration: 0.8 }}
+                transition={{
+                  delay: 1,
+                  duration: 1,
+                  type: "spring",
+                  bounce: 0.3,
+                }}
                 className="flex-shrink-0"
               >
-                <div className="w-32 h-32 bg-gradient-to-br from-purple-200 to-purple-400 rounded-3xl flex items-center justify-center shadow-2xl border-4 border-white/50">
-                  <Quote className="w-16 h-16 text-purple-800" />
+                <div className="w-32 h-32 bg-gradient-to-br from-purple-200 to-purple-400 rounded-3xl flex items-center justify-center shadow-2xl border-4 border-white/60 relative overflow-hidden">
+                  <motion.div
+                    animate={{ rotate: [0, 10, -10, 0] }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  >
+                    <Quote className="w-16 h-16 text-purple-800" />
+                  </motion.div>
+                  <div className="absolute inset-0 bg-gradient-to-tr from-transparent to-white/20" />
                 </div>
               </motion.div>
 
               {/* Testimonial Content */}
               <div className="relative flex-1">
                 <motion.div
-                  initial={{ opacity: 0, y: 30 }}
+                  initial={{ opacity: 0, y: 40 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1.2, duration: 0.8 }}
-                  className="bg-white/80 backdrop-blur-xl rounded-3xl p-8 lg:p-12 shadow-2xl border border-white/50"
+                  transition={{ delay: 1.4, duration: 1 }}
+                  className="bg-white/90 backdrop-blur-xl rounded-3xl p-8 lg:p-12 shadow-2xl border border-white/60 relative overflow-hidden"
                 >
-                  <motion.p className="text-xl lg:text-2xl leading-relaxed mb-8 text-gray-800 font-medium">
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400" />
+
+                  <motion.p
+                    className="text-lg lg:text-xl leading-relaxed mb-8 text-gray-800 font-medium"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1.8 }}
+                  >
                     "{testimonials[0].quote}"
                   </motion.p>
 
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                      <div className="w-16 h-16 bg-gradient-to-br from-purple-300 to-purple-500 rounded-2xl flex items-center justify-center text-2xl">
-                        {testimonials[0].image}
-                      </div>
+                      <motion.div
+                        className="relative"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 2, type: "spring", bounce: 0.4 }}
+                      >
+                        <img
+                          src={testimonials[0].image}
+                          alt={testimonials[0].name}
+                          className="w-16 h-16 rounded-2xl object-cover border-2 border-white shadow-lg"
+                        />
+                        <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center text-white">
+                          {testimonials[0].icon}
+                        </div>
+                      </motion.div>
                       <div>
                         <p className="font-bold text-lg text-gray-900">
                           {testimonials[0].name}
                         </p>
                         <p className="text-gray-600">{testimonials[0].role}</p>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-gray-500 flex items-center gap-1">
+                          <Briefcase className="w-3 h-3" />
                           {testimonials[0].company}
                         </p>
                       </div>
                     </div>
 
                     <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ delay: 1.6 }}
-                      className="text-center bg-gradient-to-br from-purple-200 to-purple-400 rounded-2xl p-4"
+                      initial={{ scale: 0, rotate: -45 }}
+                      animate={{ scale: 1, rotate: 0 }}
+                      transition={{ delay: 2.2, type: "spring", bounce: 0.3 }}
+                      className="text-center bg-gradient-to-br from-purple-200 to-purple-400 rounded-2xl p-4 border border-white/50"
                     >
-                      <div className="text-3xl font-black text-purple-800">
+                      <div className="text-2xl font-black text-purple-800">
                         {testimonials[0].stats.metric}
                       </div>
-                      <div className="text-sm font-semibold text-purple-700">
+                      <div className="text-xs font-semibold text-purple-700">
                         {testimonials[0].stats.label}
                       </div>
                     </motion.div>
@@ -294,40 +353,58 @@ const TestimonialSection = () => {
       <AnimatePresence>
         {currentStep === 3 && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1 }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.2 }}
             className="absolute inset-0 flex items-center justify-center px-8 z-10"
           >
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl w-full">
               {testimonials.map((testimonial, index) => (
                 <motion.div
                   key={index}
-                  initial={{ y: 100, opacity: 0, scale: 0.8 }}
+                  initial={{ y: 80, opacity: 0, scale: 0.9 }}
                   animate={{ y: 0, opacity: 1, scale: 1 }}
                   transition={{
-                    delay: 0.3 + index * 0.2,
+                    delay: 0.2 + index * 0.15,
                     duration: 0.8,
-                    ease: "easeOut",
+                    type: "spring",
+                    bounce: 0.3,
                   }}
                   className="relative group"
                 >
                   <motion.div
-                    className={`bg-gradient-to-br ${testimonial.color} rounded-3xl p-8 shadow-2xl border-4 border-white/50 backdrop-blur-sm h-full relative overflow-hidden`}
-                    whileHover={{ scale: 1.02, y: -8 }}
-                    transition={{ duration: 0.3 }}
+                    className={`bg-gradient-to-br ${testimonial.color} rounded-3xl p-8 shadow-2xl border-4 border-white/60 backdrop-blur-sm h-full relative overflow-hidden`}
+                    whileHover={{
+                      scale: 1.03,
+                      y: -10,
+                      boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.15)",
+                    }}
+                    transition={{ duration: 0.4, type: "spring", bounce: 0.2 }}
                   >
-                    {/* Background Pattern */}
-                    <div className="absolute top-4 right-4 opacity-20">
-                      <Quote className="w-8 h-8" />
+                    {/* Background decorative elements */}
+                    <div className="absolute inset-0 opacity-10">
+                      <motion.div
+                        className="absolute top-4 right-4 w-16 h-16 border-2 border-white/40 rounded-full"
+                        animate={{ rotate: 360 }}
+                        transition={{
+                          duration: 20,
+                          repeat: Infinity,
+                          ease: "linear",
+                        }}
+                      />
+                      <Quote className="absolute bottom-4 left-4 w-8 h-8 text-white/30" />
                     </div>
 
                     {/* Stats Badge */}
                     <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ delay: 0.8 + index * 0.1 }}
-                      className="absolute top-4 left-4 bg-white/60 backdrop-blur-sm rounded-xl px-3 py-2 border border-white/50"
+                      initial={{ scale: 0, y: -10 }}
+                      animate={{ scale: 1, y: 0 }}
+                      transition={{
+                        delay: 0.5 + index * 0.1,
+                        type: "spring",
+                        bounce: 0.4,
+                      }}
+                      className="absolute top-4 left-4 bg-white/80 backdrop-blur-sm rounded-xl px-3 py-2 border border-white/60 shadow-lg"
                     >
                       <div className="text-lg font-black text-gray-800">
                         {testimonial.stats.metric}
@@ -337,27 +414,59 @@ const TestimonialSection = () => {
                       </div>
                     </motion.div>
 
+                    {/* Profile Image */}
+                    <motion.div
+                      className="flex justify-center mt-12 mb-6"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{
+                        delay: 0.7 + index * 0.1,
+                        type: "spring",
+                        bounce: 0.4,
+                      }}
+                    >
+                      <div className="relative">
+                        <img
+                          src={testimonial.image}
+                          alt={testimonial.name}
+                          className="w-20 h-20 rounded-2xl object-cover border-4 border-white/80 shadow-lg"
+                        />
+                        <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-gradient-to-br from-white to-gray-100 rounded-full flex items-center justify-center shadow-lg border-2 border-white">
+                          {testimonial.icon}
+                        </div>
+                      </div>
+                    </motion.div>
+
                     {/* Content */}
-                    <div className="mt-16 mb-6">
-                      <p className="text-lg leading-relaxed text-gray-800 font-medium mb-6">
+                    <div className="text-center mb-6 relative z-10">
+                      <motion.p
+                        className="text-base leading-relaxed text-gray-800 font-medium mb-6 px-2"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.9 + index * 0.1 }}
+                      >
                         "{testimonial.quote}"
-                      </p>
+                      </motion.p>
                     </div>
 
                     {/* Author */}
-                    <div className="flex items-center gap-3 mt-auto">
-                      <div className="w-12 h-12 bg-white/60 backdrop-blur-sm rounded-xl flex items-center justify-center text-xl border border-white/50">
-                        {testimonial.image}
-                      </div>
-                      <div>
-                        <p className="font-bold text-gray-900">
-                          {testimonial.name}
-                        </p>
-                        <p className="text-sm text-gray-700">
-                          {testimonial.role}
-                        </p>
-                      </div>
-                    </div>
+                    <motion.div
+                      className="text-center relative z-10"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 1.1 + index * 0.1 }}
+                    >
+                      <p className="font-bold text-gray-900 mb-1">
+                        {testimonial.name}
+                      </p>
+                      <p className="text-sm text-gray-700 mb-1">
+                        {testimonial.role}
+                      </p>
+                      <p className="text-xs text-gray-600 flex items-center justify-center gap-1">
+                        <Briefcase className="w-3 h-3" />
+                        {testimonial.company}
+                      </p>
+                    </motion.div>
                   </motion.div>
                 </motion.div>
               ))}
@@ -370,23 +479,24 @@ const TestimonialSection = () => {
       <AnimatePresence>
         {currentStep === 4 && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1 }}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.2 }}
             className="absolute inset-0 flex items-center justify-center px-8 z-10"
           >
             <div className="max-w-6xl w-full">
               <motion.div
-                initial={{ y: -30, opacity: 0 }}
+                initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.3 }}
                 className="text-center mb-16"
               >
-                <h2 className="text-5xl md:text-6xl font-black text-gray-900 mb-6">
-                  Bewiesene Resultate
+                <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-4">
+                  Proven Success
                 </h2>
-                <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                  Zahlen, die für sich sprechen – Erfolg, der messbar ist.
+                <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                  Numbers that demonstrate our commitment to student success and
+                  career transformation.
                 </p>
               </motion.div>
 
@@ -394,42 +504,71 @@ const TestimonialSection = () => {
                 {achievements.map((achievement, index) => (
                   <motion.div
                     key={index}
-                    initial={{ y: 100, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.6 + index * 0.2, duration: 0.8 }}
+                    initial={{ y: 60, opacity: 0, scale: 0.9 }}
+                    animate={{ y: 0, opacity: 1, scale: 1 }}
+                    transition={{
+                      delay: 0.5 + index * 0.15,
+                      duration: 0.8,
+                      type: "spring",
+                      bounce: 0.3,
+                    }}
                     className="text-center group"
                   >
                     <motion.div
-                      className="bg-white/80 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/50 h-full"
-                      whileHover={{ scale: 1.05, y: -5 }}
-                      transition={{ duration: 0.3 }}
+                      className="bg-white/90 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/60 h-full relative overflow-hidden"
+                      whileHover={{
+                        scale: 1.05,
+                        y: -8,
+                        boxShadow: "0 20px 40px -12px rgba(0, 0, 0, 0.15)",
+                      }}
+                      transition={{
+                        duration: 0.3,
+                        type: "spring",
+                        bounce: 0.2,
+                      }}
                     >
+                      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400" />
+
                       <motion.div
-                        initial={{ scale: 0, rotate: -180 }}
+                        initial={{ scale: 0, rotate: -45 }}
                         animate={{ scale: 1, rotate: 0 }}
-                        transition={{ delay: 0.8 + index * 0.1, duration: 0.6 }}
+                        transition={{
+                          delay: 0.7 + index * 0.1,
+                          duration: 0.6,
+                          type: "spring",
+                          bounce: 0.4,
+                        }}
                         className={`w-16 h-16 mx-auto mb-6 ${
                           index === 0
                             ? "bg-purple-200"
                             : index === 1
                             ? "bg-pink-200"
                             : "bg-orange-200"
-                        } rounded-2xl flex items-center justify-center`}
+                        } rounded-2xl flex items-center justify-center relative overflow-hidden shadow-lg`}
                       >
+                        <div className="absolute inset-0 bg-gradient-to-tr from-transparent to-white/30" />
                         {achievement.icon}
                       </motion.div>
 
                       <motion.div
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-                        transition={{ delay: 1 + index * 0.1, duration: 0.6 }}
-                        className="text-4xl md:text-5xl font-black text-gray-900 mb-3"
+                        transition={{
+                          delay: 0.9 + index * 0.1,
+                          duration: 0.6,
+                          type: "spring",
+                          bounce: 0.3,
+                        }}
+                        className="text-3xl md:text-4xl font-black text-gray-900 mb-3"
                       >
                         {achievement.number}
                       </motion.div>
 
-                      <p className="text-gray-600 font-semibold">
+                      <p className="text-gray-800 font-bold mb-2">
                         {achievement.label}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        {achievement.description}
                       </p>
                     </motion.div>
                   </motion.div>
@@ -446,65 +585,82 @@ const TestimonialSection = () => {
           <motion.div
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
+            transition={{ duration: 1.4, ease: "easeOut" }}
             className="absolute inset-0 z-10"
           >
             <div className="h-full flex flex-col justify-center items-center px-8">
               <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
+                initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.5, duration: 0.8 }}
+                transition={{ delay: 0.6, duration: 1 }}
                 className="text-center max-w-4xl"
               >
-                <h2 className="text-5xl md:text-7xl font-black text-gray-900 mb-8">
-                  Bereit für Ihren
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-gray-900 mb-4">
+                  Ready to Start Your
                 </h2>
-                <h2 className="text-5xl md:text-7xl font-black bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 bg-clip-text text-transparent mb-8">
-                  Erfolg?
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-black bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 bg-clip-text text-transparent mb-8">
+                  Success Journey?
                 </h2>
 
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.8 }}
-                  className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto leading-relaxed"
+                  transition={{ delay: 1 }}
+                  className="text-lg text-gray-600 mb-12 max-w-2xl mx-auto leading-relaxed"
                 >
-                  Lassen Sie uns gemeinsam eine Website entwickeln, die Ihre
-                  Kunden begeistert und Ihr Business transformiert.
+                  Join thousands of students who have transformed their careers
+                  with our industry-leading internship programs.
                 </motion.p>
 
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1.2 }}
+                  transition={{ delay: 1.4 }}
                   className="flex flex-col sm:flex-row gap-6 justify-center items-center"
                 >
                   <motion.button
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.95 }}
-                    className="bg-black text-white px-8 py-4 rounded-2xl font-bold text-lg flex items-center gap-3 shadow-2xl"
+                    className="bg-black text-white px-8 py-4 rounded-2xl font-bold text-lg flex items-center gap-3 shadow-2xl group"
                   >
-                    <span>Projekt starten</span>
-                    <ArrowRight className="w-5 h-5" />
+                    <span>Start Your Journey</span>
+                    <motion.div
+                      animate={{ x: [0, 4, 0] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    >
+                      <ChevronRight className="w-5 h-5" />
+                    </motion.div>
                   </motion.button>
 
                   <motion.button
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.95 }}
-                    className="bg-white/80 backdrop-blur-xl text-gray-900 px-8 py-4 rounded-2xl font-bold text-lg border border-gray-200 shadow-xl"
+                    className="bg-white/90 backdrop-blur-xl text-gray-900 px-8 py-4 rounded-2xl font-bold text-lg border border-gray-200 shadow-xl"
                   >
-                    Portfolio ansehen
+                    View Programs
                   </motion.button>
                 </motion.div>
 
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ delay: 1.6 }}
-                  className="mt-12 text-sm text-gray-500"
+                  transition={{ delay: 1.8 }}
+                  className="mt-12 flex items-center justify-center gap-6 text-sm text-gray-500"
                 >
-                  Kostenlose Beratung • 100% Zufriedenheitsgarantie • Deutsche
-                  Qualität
+                  <div className="flex items-center gap-2">
+                    <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                    <span>Free Consultation</span>
+                  </div>
+                  <div className="w-px h-4 bg-gray-300" />
+                  <div className="flex items-center gap-2">
+                    <Award className="w-4 h-4 text-green-500" />
+                    <span>Industry Certification</span>
+                  </div>
+                  <div className="w-px h-4 bg-gray-300" />
+                  <div className="flex items-center gap-2">
+                    <TrendingUp className="w-4 h-4 text-blue-500" />
+                    <span>Career Support</span>
+                  </div>
                 </motion.div>
               </motion.div>
             </div>
@@ -512,23 +668,27 @@ const TestimonialSection = () => {
         )}
       </AnimatePresence>
 
-      {/* Progress Indicators */}
+      {/* Enhanced Progress Indicators */}
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.2 }}
         className="fixed bottom-6 left-6 z-40"
       >
-        <div className="flex gap-2 p-3 rounded-2xl bg-white/80 backdrop-blur-xl border border-gray-200 shadow-lg">
+        <div className="flex gap-2 p-4 rounded-2xl bg-white/90 backdrop-blur-xl border border-gray-200 shadow-lg">
           {[0, 1, 2, 3, 4, 5].map((step) => (
             <motion.div
               key={step}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                currentStep >= step ? "bg-gray-900" : "bg-gray-300"
+              className={`h-2 rounded-full transition-all duration-500 ${
+                currentStep >= step
+                  ? "bg-gradient-to-r from-purple-500 to-pink-500"
+                  : "bg-gray-300"
               }`}
               animate={{
-                scale: currentStep === step ? 1.5 : 1,
+                width: currentStep >= step ? 24 : 8,
+                scale: currentStep === step ? 1.2 : 1,
               }}
+              transition={{ duration: 0.3 }}
             />
           ))}
         </div>

@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Sun, Moon } from "lucide-react";
 
-const Navbar = () => {
+const Navbar = ({ navigate, location }) => {
   const [scrolled, setScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -42,21 +41,23 @@ const Navbar = () => {
 
   // Navigation items
   const navItems = [
-    { label: "About Us ", href: "/about" },
-    { label: "Program ", href: "/program" },
+    { label: "Home", href: "/" },
+    { label: "About Us", href: "/about" },
+    { label: "Programs", href: "/programs" },
     { label: "Certificate", href: "/certificate" },
-    { label: "Whats Special", href: "/special" },
+    { label: "What's Special", href: "/special" },
     { label: "Contact Us", href: "/contact" },
   ];
 
-  // Smooth scroll to section
-  const scrollToSection = (href) => {
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
+  // Check if current path is active
+  const isActiveLink = (href) => {
+    return location?.pathname === href;
+  };
+
+  // Navigate to page
+  const handleNavigation = (href) => {
+    if (navigate) {
+      navigate(href);
     }
     setIsMobileMenuOpen(false);
   };
@@ -73,7 +74,7 @@ const Navbar = () => {
 
   return (
     <>
-      <style jsx>{`
+      <style>{`
         .nav-text {
           font-family: "Inter", -apple-system, BlinkMacSystemFont, "Avenir Next",
             Avenir, "Segoe UI", "Helvetica Neue", Helvetica, Cantarell, Ubuntu,
@@ -103,6 +104,42 @@ const Navbar = () => {
             z-index: 40;
           }
         }
+
+        .nav-link-active {
+          background: #000000;
+          color: #ffffff;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-link-hover:hover {
+          border: 2px solid #000000;
+          background: transparent;
+          color: #000000;
+        }
+
+        .nav-link-default {
+          border: 2px solid transparent;
+          background: transparent;
+          color: #000000;
+        }
+
+        .dark .nav-link-active {
+          background: #ffffff;
+          color: #000000;
+          box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .nav-link-hover:hover {
+          border: 2px solid #ffffff;
+          background: transparent;
+          color: #ffffff;
+        }
+
+        .dark .nav-link-default {
+          border: 2px solid transparent;
+          background: transparent;
+          color: #ffffff;
+        }
       `}</style>
 
       {/* Desktop/Mobile Navbar */}
@@ -123,11 +160,14 @@ const Navbar = () => {
         <div className="max-w-7xl mx-auto px-4 md:px-8 py-4 md:py-6 flex items-center justify-between">
           {/* Logo Section */}
           <motion.div
-            className="flex items-center space-x-3 md:space-x-4"
+            className="flex items-center space-x-3 md:space-x-4 cursor-pointer"
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 1, delay: 0.2 }}
             whileHover={{ scale: 1.02 }}
+            onClick={() => handleNavigation("/")}
+            data-cursor-hover
+            data-cursor-text="HOME"
           >
             <motion.div
               className="w-10 h-10 md:w-14 md:h-14 bg-black rounded-xl md:rounded-2xl flex items-center justify-center relative overflow-hidden group"
@@ -165,24 +205,22 @@ const Navbar = () => {
             {navItems.map((item, index) => (
               <motion.button
                 key={item.label}
-                onClick={() => scrollToSection(item.href)}
+                onClick={() => handleNavigation(item.href)}
                 className={`nav-text px-6 py-3 rounded-2xl text-sm transition-all duration-300 relative overflow-hidden group ${
-                  activeSection === item.href.slice(1)
-                    ? isDarkMode
-                      ? "bg-white text-black shadow-lg"
-                      : "bg-black text-white shadow-lg"
-                    : isDarkMode
-                    ? "hover:bg-white hover:text-black text-white"
-                    : "hover:bg-black hover:text-white text-black"
+                  isActiveLink(item.href)
+                    ? "nav-link-active"
+                    : "nav-link-default nav-link-hover"
                 }`}
                 initial={{ opacity: 0, y: -30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 + index * 0.1 }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                data-cursor-hover
+                data-cursor-text="NAVIGATE"
               >
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 opacity-0 group-hover:opacity-100"
+                  className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 opacity-0 group-hover:opacity-20"
                   initial={{ scale: 0, rotate: 45 }}
                   whileHover={{ scale: 1, rotate: 0 }}
                   transition={{ duration: 0.4 }}
@@ -207,6 +245,8 @@ const Navbar = () => {
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 1, delay: 0.2 }}
+              data-cursor-hover
+              data-cursor-text="THEME"
             >
               {isDarkMode ? (
                 <Sun className="w-4 h-4 md:w-5 md:h-5" />
@@ -214,8 +254,6 @@ const Navbar = () => {
                 <Moon className="w-4 h-4 md:w-5 md:h-5" />
               )}
             </motion.button>
-
-            
 
             {/* Mobile Menu Button */}
             <motion.button
@@ -230,6 +268,8 @@ const Navbar = () => {
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 1, delay: 0.6 }}
+              data-cursor-hover
+              data-cursor-text="MENU"
             >
               <AnimatePresence mode="wait">
                 {isMobileMenuOpen ? (
@@ -321,6 +361,8 @@ const Navbar = () => {
                   initial={{ opacity: 0, rotate: -90 }}
                   animate={{ opacity: 1, rotate: 0 }}
                   transition={{ delay: 0.1 }}
+                  data-cursor-hover
+                  data-cursor-text="CLOSE"
                 >
                   <X className="w-5 h-5" />
                 </motion.button>
@@ -331,33 +373,43 @@ const Navbar = () => {
                 {navItems.map((item, index) => (
                   <motion.button
                     key={item.label}
-                    onClick={() => scrollToSection(item.href)}
-                    className={`w-full text-left nav-text px-6 py-4 rounded-2xl text-lg transition-all duration-300 relative overflow-hidden group ${
-                      activeSection === item.href.slice(1)
+                    onClick={() => handleNavigation(item.href)}
+                    className={`w-full text-left nav-text px-6 py-4 rounded-2xl text-lg transition-all duration-300 relative overflow-hidden group border-2 ${
+                      isActiveLink(item.href)
                         ? isDarkMode
-                          ? "bg-white text-black shadow-lg"
-                          : "bg-black text-white shadow-lg"
+                          ? "bg-white text-black shadow-lg border-white"
+                          : "bg-black text-white shadow-lg border-black"
                         : isDarkMode
-                        ? "hover:bg-gray-800 text-white border border-gray-700 hover:border-gray-600"
-                        : "hover:bg-gray-100 text-black border border-gray-200 hover:border-gray-300"
+                        ? "hover:border-white text-white border-transparent hover:bg-transparent"
+                        : "hover:border-black text-black border-transparent hover:bg-transparent"
                     }`}
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1 + index * 0.05 }}
                     whileHover={{ scale: 1.02, x: 5 }}
                     whileTap={{ scale: 0.98 }}
+                    data-cursor-hover
+                    data-cursor-text="GO"
                   >
                     <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 opacity-0 group-hover:opacity-100"
+                      className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 opacity-0 group-hover:opacity-10"
                       initial={{ scale: 0, rotate: 45 }}
                       whileHover={{ scale: 1, rotate: 0 }}
                       transition={{ duration: 0.4 }}
                     />
-                    <span className="relative z-10">{item.label}</span>
+                    <span className="relative z-10 flex items-center justify-between">
+                      {item.label}
+                      {isActiveLink(item.href) && (
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          className="w-2 h-2 bg-current rounded-full"
+                        />
+                      )}
+                    </span>
                   </motion.button>
                 ))}
               </div>
-
 
               {/* Mobile Menu Footer */}
               <div className="mt-auto pt-8 border-t border-gray-200 dark:border-gray-700">
@@ -369,7 +421,7 @@ const Navbar = () => {
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.4 }}
                 >
-                  © 2025 Inlighn ßTech
+                  © 2025 Inlighn Tech
                 </motion.div>
               </div>
             </div>
