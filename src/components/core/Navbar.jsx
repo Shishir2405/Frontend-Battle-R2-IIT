@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Sun, Moon } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 const Navbar = ({ navigate, location }) => {
   const [scrolled, setScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   // Check if mobile view
@@ -29,15 +28,6 @@ const Navbar = ({ navigate, location }) => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  // Dark mode effect
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [isDarkMode]);
 
   // Navigation items
   const navItems = [
@@ -67,11 +57,6 @@ const Navbar = ({ navigate, location }) => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  // Toggle dark mode
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-  };
-
   return (
     <>
       <style>{`
@@ -93,16 +78,14 @@ const Navbar = ({ navigate, location }) => {
           -webkit-backdrop-filter: blur(12px);
         }
 
-        @media (max-width: 767px) {
-          .mobile-menu-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 40;
-          }
+        .mobile-menu-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.5);
+          z-index: 40;
         }
 
         .nav-link-active {
@@ -122,35 +105,13 @@ const Navbar = ({ navigate, location }) => {
           background: transparent;
           color: #000000;
         }
-
-        .dark .nav-link-active {
-          background: #ffffff;
-          color: #000000;
-          box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
-        }
-
-        .dark .nav-link-hover:hover {
-          border: 2px solid #ffffff;
-          background: transparent;
-          color: #ffffff;
-        }
-
-        .dark .nav-link-default {
-          border: 2px solid transparent;
-          background: transparent;
-          color: #ffffff;
-        }
       `}</style>
 
       {/* Desktop/Mobile Navbar */}
       <motion.nav
         className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
           scrolled
-            ? isDarkMode
-              ? "bg-gray-900/90 glass-effect border-b border-white/10 shadow-lg"
-              : "bg-[#f9f4eb]/90 glass-effect border-b border-black/10 shadow-lg"
-            : isDarkMode
-            ? "bg-gray-900/80 glass-effect border-b border-white/5"
+            ? "bg-[#f9f4eb]/90 glass-effect border-b border-black/10 shadow-lg"
             : "bg-[#f9f4eb]/80 glass-effect border-b border-black/5"
         }`}
         initial={{ y: -100, opacity: 0 }}
@@ -185,9 +146,7 @@ const Navbar = ({ navigate, location }) => {
             </motion.div>
 
             <motion.span
-              className={`nav-text text-lg md:text-2xl tracking-wide font-black ${
-                isDarkMode ? "text-white" : "text-gray-900"
-              }`}
+              className="nav-text text-lg md:text-2xl tracking-wide font-black text-gray-900"
               whileHover={{
                 background: "linear-gradient(45deg, #7c3aed, #ec4899, #f97316)",
                 WebkitBackgroundClip: "text",
@@ -230,39 +189,12 @@ const Navbar = ({ navigate, location }) => {
             ))}
           </div>
 
-          {/* Right Side - Theme Toggle & Mobile Menu */}
-          <div className="flex items-center space-x-3">
-            {/* Theme Toggle */}
-            <motion.button
-              onClick={toggleDarkMode}
-              className={`p-2 md:p-3 rounded-xl transition-all duration-300 ${
-                isDarkMode
-                  ? "bg-yellow-400 text-gray-900 hover:bg-yellow-300"
-                  : "bg-gray-800 text-white hover:bg-gray-700"
-              }`}
-              whileHover={{ scale: 1.1, rotate: 180 }}
-              whileTap={{ scale: 0.9 }}
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1, delay: 0.2 }}
-              data-cursor-hover
-              data-cursor-text="THEME"
-            >
-              {isDarkMode ? (
-                <Sun className="w-4 h-4 md:w-5 md:h-5" />
-              ) : (
-                <Moon className="w-4 h-4 md:w-5 md:h-5" />
-              )}
-            </motion.button>
-
-            {/* Mobile Menu Button */}
+          {/* Right Side - Mobile Menu Button (Available on All Screens) */}
+          <div className="flex items-center">
+            {/* Mobile Menu Button - Now available on all screen sizes */}
             <motion.button
               onClick={toggleMobileMenu}
-              className={`md:hidden p-2 rounded-xl transition-all duration-300 ${
-                isDarkMode
-                  ? "bg-gray-800 text-white hover:bg-gray-700"
-                  : "bg-gray-100 text-black hover:bg-gray-200"
-              }`}
+              className="p-2 md:p-3 rounded-xl transition-all duration-300 bg-gray-100 text-black hover:bg-gray-200"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               initial={{ opacity: 0, x: 50 }}
@@ -312,7 +244,7 @@ const Navbar = ({ navigate, location }) => {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            className="mobile-menu-overlay md:hidden"
+            className="mobile-menu-overlay"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -326,11 +258,7 @@ const Navbar = ({ navigate, location }) => {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            className={`fixed top-0 right-0 h-full w-80 max-w-[85vw] z-50 ${
-              isDarkMode
-                ? "bg-gray-900/95 border-l border-white/10"
-                : "bg-[#f9f4eb]/95 border-l border-black/10"
-            } glass-effect md:hidden`}
+            className="fixed top-0 right-0 h-full w-80 max-w-[85vw] z-50 bg-[#f9f4eb]/95 border-l border-black/10 glass-effect"
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
@@ -340,9 +268,7 @@ const Navbar = ({ navigate, location }) => {
               {/* Mobile Menu Header */}
               <div className="flex items-center justify-between mb-8">
                 <motion.span
-                  className={`nav-text text-xl font-black ${
-                    isDarkMode ? "text-white" : "text-gray-900"
-                  }`}
+                  className="nav-text text-xl font-black text-gray-900"
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.1 }}
@@ -351,11 +277,7 @@ const Navbar = ({ navigate, location }) => {
                 </motion.span>
                 <motion.button
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`p-2 rounded-xl ${
-                    isDarkMode
-                      ? "bg-gray-800 text-white hover:bg-gray-700"
-                      : "bg-gray-100 text-black hover:bg-gray-200"
-                  }`}
+                  className="p-2 rounded-xl bg-gray-100 text-black hover:bg-gray-200"
                   whileHover={{ scale: 1.1, rotate: 90 }}
                   whileTap={{ scale: 0.9 }}
                   initial={{ opacity: 0, rotate: -90 }}
@@ -376,11 +298,7 @@ const Navbar = ({ navigate, location }) => {
                     onClick={() => handleNavigation(item.href)}
                     className={`w-full text-left nav-text px-6 py-4 rounded-2xl text-lg transition-all duration-300 relative overflow-hidden group border-2 ${
                       isActiveLink(item.href)
-                        ? isDarkMode
-                          ? "bg-white text-black shadow-lg border-white"
-                          : "bg-black text-white shadow-lg border-black"
-                        : isDarkMode
-                        ? "hover:border-white text-white border-transparent hover:bg-transparent"
+                        ? "bg-black text-white shadow-lg border-black"
                         : "hover:border-black text-black border-transparent hover:bg-transparent"
                     }`}
                     initial={{ opacity: 0, x: 20 }}
@@ -412,11 +330,9 @@ const Navbar = ({ navigate, location }) => {
               </div>
 
               {/* Mobile Menu Footer */}
-              <div className="mt-auto pt-8 border-t border-gray-200 dark:border-gray-700">
+              <div className="mt-auto pt-8 border-t border-gray-200">
                 <motion.div
-                  className={`text-center text-sm ${
-                    isDarkMode ? "text-gray-400" : "text-gray-600"
-                  }`}
+                  className="text-center text-sm text-gray-600"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.4 }}

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
 import {
   ArrowLeft,
   Star,
@@ -30,10 +29,18 @@ const ProgramDescriptionPage = () => {
   const [activeTab, setActiveTab] = useState("overview");
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [selectedModule, setSelectedModule] = useState(null);
-  const { scrollY } = useScroll();
-  const headerY = useTransform(scrollY, [0, 300], [0, -50]);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
-  // Sample program data - this would come from your backend/routing
+  useEffect(() => {
+    const updateMousePosition = (e) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+
+    window.addEventListener("mousemove", updateMousePosition);
+    return () => window.removeEventListener("mousemove", updateMousePosition);
+  }, []);
+
+  // Sample program data
   const programData = {
     id: "fullstack-development",
     title: "Full Stack Development Internship",
@@ -42,7 +49,7 @@ const ProgramDescriptionPage = () => {
       "Comprehensive full-stack development program covering React, Node.js, databases, and deployment strategies. Build real-world projects and gain industry-ready skills.",
     image:
       "https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=800&h=400&fit=crop",
-    icon: <Database className="w-8 h-8" />,
+    icon: <Database className="w-6 h-6" />,
     rating: 4.9,
     reviews: 1247,
     students: 3420,
@@ -51,8 +58,8 @@ const ProgramDescriptionPage = () => {
     price: "₹15,999",
     originalPrice: "₹25,999",
     discount: 38,
-    gradient: "from-purple-500 via-violet-500 to-indigo-600",
-    bgColor: "from-purple-50 to-violet-100",
+    gradient: "from-violet-200 via-violet-300 to-violet-400",
+    accent: "bg-violet-900",
     instructor: {
       name: "Rahul Sharma",
       title: "Senior Full Stack Developer",
@@ -196,17 +203,27 @@ const ProgramDescriptionPage = () => {
     return (
       <div className="flex items-center space-x-1">
         {[...Array(fullStars)].map((_, i) => (
-          <Star key={i} className={`${size} text-yellow-400 fill-current`} />
+          <Star key={i} className={`${size} text-black fill-current`} />
         ))}
         {hasHalfStar && (
-          <Star className={`${size} text-yellow-400 fill-current opacity-50`} />
+          <Star className={`${size} text-black fill-current opacity-50`} />
         )}
         {[...Array(5 - Math.ceil(rating))].map((_, i) => (
-          <Star key={i} className={`${size} text-gray-300`} />
+          <Star key={i} className={`${size} text-black/20`} />
         ))}
       </div>
     );
   };
+
+  // Subtle mouse parallax effect
+  const mouseParallaxX =
+    (mousePosition.x -
+      (typeof window !== "undefined" ? window.innerWidth : 0) / 2) *
+    0.002;
+  const mouseParallaxY =
+    (mousePosition.y -
+      (typeof window !== "undefined" ? window.innerHeight : 0) / 2) *
+    0.002;
 
   return (
     <>
@@ -214,101 +231,157 @@ const ProgramDescriptionPage = () => {
         @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
         @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap");
 
-        .gradient-text {
-          background: linear-gradient(
-            135deg,
-            #8b5cf6 0%,
-            #a855f7 25%,
-            #c084fc 50%,
-            #e879f9 75%,
-            #f472b6 100%
-          );
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
+        :root {
+          --font-family-sans: "Inter", -apple-system, BlinkMacSystemFont,
+            system-ui, sans-serif;
+          --font-family-mono: "JetBrains Mono", "Fira Code", monospace;
         }
 
-        .glass-morphism {
-          background: rgba(255, 255, 255, 0.1);
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(255, 255, 255, 0.2);
+        .font-sans {
+          font-family: var(--font-family-sans);
+        }
+
+        .font-mono {
+          font-family: var(--font-family-mono);
+        }
+
+        .hero-title {
+          font-family: var(--font-family-sans);
+          font-size: clamp(2rem, 5vw, 3rem);
+          font-weight: 900;
+          line-height: 0.9;
+          letter-spacing: -0.02em;
+        }
+
+        .decorative-text {
+          font-family: var(--font-family-mono);
+          font-size: 0.75rem;
+          font-weight: 500;
+          letter-spacing: 0.1em;
+        }
+
+        @keyframes pulse {
+          0%,
+          100% {
+            opacity: 0.1;
+          }
+          50% {
+            opacity: 0.3;
+          }
+        }
+
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
       `}</style>
 
       <div className="min-h-screen bg-[#f9f4eb]">
-        {/* Header with Hero Section */}
-        <motion.div className="relative overflow-hidden" style={{ y: headerY }}>
-          {/* Background Pattern */}
-          <div className="absolute inset-0 opacity-10">
-            <div
-              className="absolute inset-0"
-              style={{
-                backgroundImage: `radial-gradient(circle at 25% 25%, #8b5cf6 0%, transparent 50%), 
-                               radial-gradient(circle at 75% 75%, #c084fc 0%, transparent 50%)`,
-              }}
-            />
+        {/* Top Navigation Dots */}
+        <div className="absolute top-20 left-0 right-0 flex justify-between items-center px-12 z-10 mt-10">
+          <div className="flex space-x-1">
+            {[...Array(3)].map((_, i) => (
+              <div
+                key={i}
+                className="w-1 h-1 bg-black rounded-full"
+                style={{
+                  opacity: [1, 0.3, 1][i % 3],
+                  animation: `pulse 2s ease-in-out infinite ${i * 0.3}s`,
+                }}
+              />
+            ))}
           </div>
 
+          <div className="decorative-text text-black/60">FULL</div>
+
+          <div className="decorative-text text-black/60">STACK</div>
+
+          <div className="flex space-x-1">
+            {[...Array(3)].map((_, i) => (
+              <div
+                key={i}
+                className="w-1 h-1 bg-black rounded-full"
+                style={{
+                  opacity: [0.3, 1, 0.3][i % 3],
+                  animation: `pulse 2s ease-in-out infinite ${i * 0.3 + 1}s`,
+                }}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Header */}
+        <div className="relative overflow-hidden pt-32">
           <div className="relative z-10 max-w-7xl mx-auto px-8 py-8">
             {/* Navigation */}
-            <motion.div
-              className="flex items-center justify-between mb-8"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <motion.button
-                className="flex items-center space-x-2 text-gray-700 hover:text-gray-900 transition-colors"
-                whileHover={{ x: -5 }}
+            <div className="flex items-center justify-between mb-12">
+              <button
+                className="flex items-center space-x-2 text-black/70 hover:text-black transition-colors font-sans"
                 onClick={() => window.history.back()}
+                style={{
+                  transform: `translate(${mouseParallaxX}px, ${mouseParallaxY}px)`,
+                }}
               >
                 <ArrowLeft className="w-5 h-5" />
                 <span className="font-medium">Back to Programs</span>
-              </motion.button>
+              </button>
 
               <div className="flex items-center space-x-4">
-                <motion.button
-                  className="p-2 rounded-full bg-white/80 hover:bg-white transition-colors shadow-sm"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
+                <button
+                  className="p-2 rounded-xl bg-white/80 hover:bg-white transition-colors shadow-sm border border-white/40"
+                  style={{
+                    transform: `translate(${mouseParallaxX * 2}px, ${
+                      mouseParallaxY * 2
+                    }px)`,
+                  }}
                 >
-                  <Share2 className="w-5 h-5 text-gray-600" />
-                </motion.button>
-                <motion.button
-                  className="p-2 rounded-full bg-white/80 hover:bg-white transition-colors shadow-sm"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
+                  <Share2 className="w-5 h-5 text-black/60" />
+                </button>
+                <button
+                  className="p-2 rounded-xl bg-white/80 hover:bg-white transition-colors shadow-sm border border-white/40"
+                  style={{
+                    transform: `translate(${mouseParallaxX * 2}px, ${
+                      mouseParallaxY * 2
+                    }px)`,
+                  }}
                 >
-                  <Heart className="w-5 h-5 text-gray-600" />
-                </motion.button>
+                  <Heart className="w-5 h-5 text-black/60" />
+                </button>
               </div>
-            </motion.div>
+            </div>
 
             {/* Hero Content */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               {/* Left Content */}
-              <motion.div
-                className="space-y-6"
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8 }}
-              >
+              <div className="space-y-8">
                 <div className="flex items-center space-x-3">
                   <div
-                    className={`p-3 rounded-xl bg-gradient-to-r ${programData.gradient} text-white shadow-lg`}
+                    className={`p-3 rounded-xl bg-gradient-to-br ${programData.gradient} border border-white/40 shadow-lg`}
                   >
-                    {programData.icon}
+                    <div
+                      className={`${programData.accent} p-2 rounded-sm transform rotate-45`}
+                    >
+                      <div className="text-white transform -rotate-45">
+                        {programData.icon}
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-sm text-gray-600 font-mono tracking-wide uppercase">
+                  <div className="decorative-text text-black/60 uppercase">
                     {programData.level}
                   </div>
                 </div>
 
                 <div>
-                  <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4 leading-tight">
+                  <h1 className="hero-title text-black mb-4 leading-tight">
                     {programData.title}
                   </h1>
-                  <p className="text-xl text-gray-600 leading-relaxed">
+                  <p className="text-xl text-black/70 leading-relaxed font-sans">
                     {programData.subtitle}
                   </p>
                 </div>
@@ -316,130 +389,118 @@ const ProgramDescriptionPage = () => {
                 {/* Rating and Stats */}
                 <div className="flex flex-wrap items-center gap-6">
                   <div className="flex items-center space-x-2">
-                    <StarRating rating={programData.rating} size="w-5 h-5" />
-                    <span className="font-semibold text-gray-900">
+                    <StarRating rating={programData.rating} size="w-4 h-4" />
+                    <span className="font-semibold text-black font-sans">
                       {programData.rating}
                     </span>
-                    <span className="text-gray-600">
+                    <span className="text-black/60 font-sans">
                       ({programData.reviews} reviews)
                     </span>
                   </div>
-                  <div className="flex items-center space-x-2 text-gray-600">
-                    <Users className="w-5 h-5" />
+                  <div className="flex items-center space-x-2 text-black/60 font-sans">
+                    <Users className="w-4 h-4" />
                     <span>{programData.students} students</span>
                   </div>
-                  <div className="flex items-center space-x-2 text-gray-600">
-                    <Clock className="w-5 h-5" />
+                  <div className="flex items-center space-x-2 text-black/60 font-sans">
+                    <Clock className="w-4 h-4" />
                     <span>{programData.duration}</span>
                   </div>
                 </div>
 
                 {/* Price */}
                 <div className="flex items-center space-x-4">
-                  <div className="text-3xl font-bold gradient-text">
+                  <div className="text-3xl font-black text-black font-sans">
                     {programData.price}
                   </div>
-                  <div className="text-lg text-gray-500 line-through">
+                  <div className="text-lg text-black/40 line-through font-sans">
                     {programData.originalPrice}
                   </div>
-                  <div className="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold">
+                  <div className="bg-black text-white px-3 py-1 rounded-full text-sm font-semibold font-sans">
                     {programData.discount}% OFF
                   </div>
                 </div>
-              </motion.div>
+              </div>
 
               {/* Right Content - Image */}
-              <motion.div
-                className="relative"
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-              >
-                <div className="relative rounded-3xl overflow-hidden shadow-2xl">
+              <div className="relative">
+                <div className="relative rounded-2xl overflow-hidden shadow-lg border border-white/40">
                   <img
                     src={programData.image}
                     alt={programData.title}
                     className="w-full h-80 object-cover"
                   />
-                  <div
-                    className={`absolute inset-0 bg-gradient-to-t ${programData.gradient} opacity-20`}
-                  />
+                  <div className="absolute inset-0 bg-black/5" />
 
                   {/* Play button overlay */}
-                  <motion.div
-                    className="absolute inset-0 flex items-center justify-center"
-                    whileHover={{ scale: 1.1 }}
-                  >
-                    <motion.button
-                      className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors"
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <button
+                      className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors border border-white/30"
+                      style={{
+                        transform: `translate(${mouseParallaxX * 3}px, ${
+                          mouseParallaxY * 3
+                        }px)`,
+                      }}
                     >
-                      <Play className="w-8 h-8 ml-1" fill="currentColor" />
-                    </motion.button>
-                  </motion.div>
+                      <Play className="w-6 h-6 ml-0.5" fill="currentColor" />
+                    </button>
+                  </div>
                 </div>
 
                 {/* Floating stats */}
-                <motion.div
-                  className="absolute -bottom-6 -left-6 bg-white rounded-2xl p-4 shadow-xl"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1 }}
+                <div
+                  className="absolute -bottom-4 -left-4 bg-white rounded-2xl p-4 shadow-lg border border-white/40"
+                  style={{
+                    transform: `translate(${mouseParallaxX * 2}px, ${
+                      mouseParallaxY * 2
+                    }px)`,
+                  }}
                 >
                   <div className="flex items-center space-x-3">
-                    <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                      <CheckCircle className="w-6 h-6 text-green-600" />
+                    <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
+                      <CheckCircle className="w-5 h-5 text-green-600" />
                     </div>
                     <div>
-                      <div className="font-semibold text-gray-900">
+                      <div className="font-semibold text-black font-sans text-sm">
                         95% Success Rate
                       </div>
-                      <div className="text-sm text-gray-600">Job Placement</div>
+                      <div className="text-xs text-black/60 font-sans">
+                        Job Placement
+                      </div>
                     </div>
                   </div>
-                </motion.div>
-              </motion.div>
+                </div>
+              </div>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Sticky Enrollment Card */}
-        <motion.div
-          className="sticky top-4 z-50 max-w-7xl mx-auto px-8 mb-8"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-        >
-          <div className="glass-morphism rounded-2xl p-6">
+        <div className="sticky top-20 z-50 max-w-7xl mx-auto px-8 mb-8">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white/40 shadow-sm">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
-                <div className="text-2xl font-bold gradient-text">
+                <div className="text-2xl font-black text-black font-sans">
                   {programData.price}
                 </div>
-                <div className="text-gray-600">Limited Time Offer</div>
+                <div className="text-black/60 font-sans">
+                  Limited Time Offer
+                </div>
               </div>
               <div className="flex items-center space-x-4">
-                <motion.button
-                  className="px-6 py-3 bg-white border-2 border-gray-300 rounded-xl font-semibold text-gray-700 hover:border-gray-400 transition-colors"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
+                <button className="px-6 py-3 bg-white border border-black/20 rounded-xl font-semibold text-black hover:border-black/40 transition-all font-sans">
                   Try Free Demo
-                </motion.button>
-                <motion.button
-                  className={`px-8 py-3 bg-gradient-to-r ${programData.gradient} text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all flex items-center space-x-2`}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                </button>
+                <button
+                  className="px-8 py-3 bg-black text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all flex items-center space-x-2 font-sans"
                   onClick={() => setIsEnrolled(true)}
                 >
                   <span>Enroll Now</span>
                   <ArrowRight className="w-4 h-4" />
-                </motion.button>
+                </button>
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Main Content */}
         <div className="max-w-7xl mx-auto px-8 pb-20">
@@ -447,86 +508,74 @@ const ProgramDescriptionPage = () => {
             {/* Left Content */}
             <div className="lg:col-span-2 space-y-8">
               {/* Navigation Tabs */}
-              <div className="flex space-x-1 bg-white/50 rounded-2xl p-2">
+              <div className="flex space-x-1 bg-white/50 rounded-2xl p-2 border border-white/40">
                 {tabs.map((tab) => (
-                  <motion.button
+                  <button
                     key={tab.id}
-                    className={`flex-1 flex items-center justify-center space-x-2 py-3 px-4 rounded-xl font-medium transition-all ${
+                    className={`flex-1 flex items-center justify-center space-x-2 py-3 px-4 rounded-xl font-medium transition-all font-sans text-sm ${
                       activeTab === tab.id
-                        ? "bg-white shadow-sm text-gray-900"
-                        : "text-gray-600 hover:text-gray-900"
+                        ? "bg-white shadow-sm text-black border border-white/60"
+                        : "text-black/60 hover:text-black"
                     }`}
                     onClick={() => setActiveTab(tab.id)}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
                   >
                     {tab.icon}
                     <span>{tab.label}</span>
-                  </motion.button>
+                  </button>
                 ))}
               </div>
 
               {/* Tab Content */}
-              <motion.div
-                key={activeTab}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="bg-white rounded-3xl p-8 shadow-lg"
-              >
+              <div className="bg-white rounded-2xl p-8 shadow-lg border border-white/40">
                 {activeTab === "overview" && (
                   <div className="space-y-8">
                     <div>
-                      <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                      <h2 className="text-2xl font-bold text-black mb-4 font-sans">
                         Program Overview
                       </h2>
-                      <p className="text-gray-600 leading-relaxed text-lg">
+                      <p className="text-black/70 leading-relaxed text-lg font-sans">
                         {programData.description}
                       </p>
                     </div>
 
                     <div>
-                      <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                      <h3 className="text-xl font-semibold text-black mb-4 font-sans">
                         What You'll Learn
                       </h3>
                       <div className="grid grid-cols-2 gap-3">
                         {programData.skills.map((skill, index) => (
-                          <motion.div
+                          <div
                             key={skill}
-                            className="flex items-center space-x-2 p-3 bg-gray-50 rounded-xl"
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: index * 0.1 }}
+                            className="flex items-center space-x-2 p-3 bg-gray-50 rounded-xl border border-gray-100"
                           >
-                            <CheckCircle className="w-5 h-5 text-green-500" />
-                            <span className="text-gray-700">{skill}</span>
-                          </motion.div>
+                            <CheckCircle className="w-4 h-4 text-green-500" />
+                            <span className="text-black/70 font-sans text-sm">
+                              {skill}
+                            </span>
+                          </div>
                         ))}
                       </div>
                     </div>
 
                     <div>
-                      <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                      <h3 className="text-xl font-semibold text-black mb-4 font-sans">
                         Program Features
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {programData.features.map((feature, index) => (
-                          <motion.div
+                          <div
                             key={feature}
                             className="flex items-center space-x-3 p-4 border border-gray-200 rounded-xl hover:border-gray-300 transition-colors"
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: index * 0.1 }}
                           >
                             <div
-                              className={`w-10 h-10 bg-gradient-to-r ${programData.gradient} rounded-full flex items-center justify-center`}
+                              className={`w-8 h-8 bg-gradient-to-br ${programData.gradient} rounded-xl flex items-center justify-center border border-white/40`}
                             >
-                              <CheckCircle className="w-5 h-5 text-white" />
+                              <CheckCircle className="w-4 h-4 text-white" />
                             </div>
-                            <span className="font-medium text-gray-900">
+                            <span className="font-medium text-black font-sans text-sm">
                               {feature}
                             </span>
-                          </motion.div>
+                          </div>
                         ))}
                       </div>
                     </div>
@@ -535,38 +584,34 @@ const ProgramDescriptionPage = () => {
 
                 {activeTab === "curriculum" && (
                   <div className="space-y-6">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                    <h2 className="text-2xl font-bold text-black mb-6 font-sans">
                       Course Curriculum
                     </h2>
                     {programData.modules.map((module, index) => (
-                      <motion.div
+                      <div
                         key={module.id}
                         className="border border-gray-200 rounded-2xl overflow-hidden"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.1 }}
                       >
-                        <motion.div
+                        <div
                           className="p-6 cursor-pointer hover:bg-gray-50 transition-colors"
                           onClick={() =>
                             setSelectedModule(
                               selectedModule === module.id ? null : module.id
                             )
                           }
-                          whileHover={{ backgroundColor: "#f9fafb" }}
                         >
                           <div className="flex items-center justify-between">
                             <div className="flex items-center space-x-4">
                               <div
-                                className={`w-12 h-12 bg-gradient-to-r ${programData.gradient} rounded-xl flex items-center justify-center text-white font-bold`}
+                                className={`w-10 h-10 bg-gradient-to-br ${programData.gradient} rounded-xl flex items-center justify-center text-black font-bold border border-white/40`}
                               >
                                 {index + 1}
                               </div>
                               <div>
-                                <h3 className="text-lg font-semibold text-gray-900">
+                                <h3 className="text-lg font-semibold text-black font-sans">
                                   {module.title}
                                 </h3>
-                                <div className="flex items-center space-x-4 text-sm text-gray-600 mt-1">
+                                <div className="flex items-center space-x-4 text-sm text-black/60 mt-1 font-sans">
                                   <span className="flex items-center space-x-1">
                                     <Clock className="w-4 h-4" />
                                     <span>{module.duration}</span>
@@ -578,26 +623,23 @@ const ProgramDescriptionPage = () => {
                                 </div>
                               </div>
                             </div>
-                            <motion.div
-                              animate={{
-                                rotate: selectedModule === module.id ? 180 : 0,
+                            <div
+                              style={{
+                                transform:
+                                  selectedModule === module.id
+                                    ? "rotate(90deg)"
+                                    : "rotate(0deg)",
+                                transition: "transform 0.3s ease",
                               }}
-                              transition={{ duration: 0.3 }}
                             >
-                              <ArrowRight className="w-5 h-5 text-gray-400" />
-                            </motion.div>
+                              <ArrowRight className="w-5 h-5 text-black/40" />
+                            </div>
                           </div>
-                        </motion.div>
+                        </div>
 
                         {selectedModule === module.id && (
-                          <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: "auto", opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.3 }}
-                            className="px-6 pb-6 border-t border-gray-100"
-                          >
-                            <p className="text-gray-600 mb-4">
+                          <div className="px-6 pb-6 border-t border-gray-100">
+                            <p className="text-black/60 mb-4 font-sans">
                               {module.description}
                             </p>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -607,177 +649,182 @@ const ProgramDescriptionPage = () => {
                                   className="flex items-center space-x-2"
                                 >
                                   <CheckCircle className="w-4 h-4 text-green-500" />
-                                  <span className="text-sm text-gray-700">
+                                  <span className="text-sm text-black/70 font-sans">
                                     {topic}
                                   </span>
                                 </div>
                               ))}
                             </div>
-                          </motion.div>
+                          </div>
                         )}
-                      </motion.div>
+                      </div>
                     ))}
                   </div>
                 )}
 
                 {activeTab === "projects" && (
                   <div className="space-y-6">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                    <h2 className="text-2xl font-bold text-black mb-6 font-sans">
                       Real-World Projects
                     </h2>
                     {programData.projects.map((project, index) => (
-                      <motion.div
+                      <div
                         key={index}
                         className="p-6 border border-gray-200 rounded-2xl hover:border-gray-300 transition-colors"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.1 }}
                       >
-                        <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                        <h3 className="text-xl font-semibold text-black mb-3 font-sans">
                           {project.title}
                         </h3>
-                        <p className="text-gray-600 mb-4">
+                        <p className="text-black/60 mb-4 font-sans">
                           {project.description}
                         </p>
                         <div className="flex flex-wrap gap-2">
                           {project.tech.map((tech, techIndex) => (
                             <span
                               key={techIndex}
-                              className={`px-3 py-1 bg-gradient-to-r ${programData.gradient} text-white text-sm rounded-full`}
+                              className="px-3 py-1 bg-black text-white text-sm rounded-full font-sans"
                             >
                               {tech}
                             </span>
                           ))}
                         </div>
-                      </motion.div>
+                      </div>
                     ))}
                   </div>
                 )}
 
                 {activeTab === "instructor" && (
                   <div className="space-y-6">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                    <h2 className="text-2xl font-bold text-black mb-6 font-sans">
                       Meet Your Instructor
                     </h2>
                     <div className="flex items-start space-x-6">
                       <img
                         src={programData.instructor.image}
                         alt={programData.instructor.name}
-                        className="w-24 h-24 rounded-2xl object-cover"
+                        className="w-20 h-20 rounded-2xl object-cover border border-white/40"
                       />
                       <div className="flex-1">
-                        <h3 className="text-xl font-semibold text-gray-900">
+                        <h3 className="text-xl font-semibold text-black font-sans">
                           {programData.instructor.name}
                         </h3>
-                        <p className="text-gray-600 mb-2">
+                        <p className="text-black/60 mb-2 font-sans">
                           {programData.instructor.title} at{" "}
                           {programData.instructor.company}
                         </p>
-                        <p className="text-gray-600 mb-4">
+                        <p className="text-black/60 mb-4 font-sans">
                           {programData.instructor.experience} experience
                         </p>
-                        <motion.button
-                          className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 transition-colors"
-                          whileHover={{ x: 5 }}
-                        >
+                        <button className="flex items-center space-x-2 text-black hover:text-black/80 transition-colors font-sans">
                           <MessageCircle className="w-5 h-5" />
                           <span>Message Instructor</span>
-                        </motion.button>
+                        </button>
                       </div>
                     </div>
                   </div>
                 )}
-              </motion.div>
+              </div>
             </div>
 
             {/* Right Sidebar */}
             <div className="space-y-6">
               {/* Quick Info Card */}
-              <motion.div
-                className="bg-white rounded-3xl p-6 shadow-lg sticky top-32"
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 }}
-              >
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              <div className="bg-white rounded-2xl p-6 shadow-lg sticky top-32 border border-white/40">
+                <h3 className="text-lg font-semibold text-black mb-4 font-sans">
                   Program Details
                 </h3>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-600">Duration</span>
-                    <span className="font-semibold">
+                    <span className="text-black/60 font-sans">Duration</span>
+                    <span className="font-semibold font-sans">
                       {programData.duration}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-600">Level</span>
-                    <span className="font-semibold">{programData.level}</span>
+                    <span className="text-black/60 font-sans">Level</span>
+                    <span className="font-semibold font-sans">
+                      {programData.level}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-600">Students</span>
-                    <span className="font-semibold">
+                    <span className="text-black/60 font-sans">Students</span>
+                    <span className="font-semibold font-sans">
                       {programData.students}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-600">Certificate</span>
-                    <span className="font-semibold text-green-600">
+                    <span className="text-black/60 font-sans">Certificate</span>
+                    <span className="font-semibold text-green-600 font-sans">
                       ✓ Included
                     </span>
                   </div>
                 </div>
 
                 <div className="mt-6 pt-6 border-t border-gray-200">
-                  <motion.button
-                    className="w-full bg-gray-100 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-colors flex items-center justify-center space-x-2"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
+                  <button className="w-full bg-gray-100 text-black py-3 rounded-xl font-semibold hover:bg-gray-200 transition-colors flex items-center justify-center space-x-2 font-sans">
                     <Download className="w-4 h-4" />
                     <span>Download Brochure</span>
-                  </motion.button>
+                  </button>
                 </div>
-              </motion.div>
+              </div>
             </div>
           </div>
         </div>
 
+        {/* Bottom Decorative Text */}
+        <div className="flex justify-center pb-8">
+          <div className="decorative-text text-black/40">
+            TECH EDUCATION & INNOVATION
+          </div>
+        </div>
+
+        {/* Subtle Background Elements */}
+        <div className="absolute inset-0 pointer-events-none">
+          {[...Array(8)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute w-1 h-1 bg-black/10 rounded-full"
+              style={{
+                left: `${20 + Math.random() * 60}%`,
+                top: `${20 + Math.random() * 60}%`,
+                animation: `pulse ${
+                  4 + Math.random() * 4
+                }s ease-in-out infinite ${Math.random() * 2}s`,
+              }}
+            />
+          ))}
+        </div>
+
         {/* Enrollment Success Modal */}
         {isEnrolled && (
-          <motion.div
+          <div
             className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
             onClick={() => setIsEnrolled(false)}
           >
-            <motion.div
-              className="bg-white rounded-3xl p-8 max-w-md w-full text-center"
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
+            <div
+              className="bg-white rounded-2xl p-8 max-w-md w-full text-center border border-white/40"
               onClick={(e) => e.stopPropagation()}
             >
               <div
-                className={`w-16 h-16 bg-gradient-to-r ${programData.gradient} rounded-full flex items-center justify-center mx-auto mb-4`}
+                className={`w-16 h-16 bg-gradient-to-br ${programData.gradient} rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/40`}
               >
                 <CheckCircle className="w-8 h-8 text-white" />
               </div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              <h2 className="text-2xl font-bold text-black mb-2 font-sans">
                 Enrollment Successful!
               </h2>
-              <p className="text-gray-600 mb-6">
+              <p className="text-black/60 mb-6 font-sans">
                 Welcome to your learning journey! Check your email for next
                 steps.
               </p>
-              <motion.button
-                className={`w-full bg-gradient-to-r ${programData.gradient} text-white py-3 rounded-xl font-semibold shadow-lg`}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+              <button
+                className="w-full bg-black text-white py-3 rounded-xl font-semibold shadow-lg font-sans"
                 onClick={() => setIsEnrolled(false)}
               >
                 Continue Learning
-              </motion.button>
-            </motion.div>
-          </motion.div>
+              </button>
+            </div>
+          </div>
         )}
       </div>
     </>

@@ -1,51 +1,55 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   FileText,
   Target,
   Eye,
   ChevronLeft,
   ChevronRight,
-  Sparkles,
-  Award,
-  Users,
-  Rocket,
+  ArrowRight,
 } from "lucide-react";
 
-const AboutUsCarouselSection = () => {
+const MinimalAboutCarousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const updateMousePosition = (e) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+
+    window.addEventListener("mousemove", updateMousePosition);
+    return () => window.removeEventListener("mousemove", updateMousePosition);
+  }, []);
 
   const slides = [
     {
       id: 0,
-      icon: <FileText className="w-12 h-12 text-white" />,
+      icon: <FileText className="w-6 h-6" />,
       title: "About INLIGHN TECH",
       content:
-        "At INLIGHN TECH, we believe that the future of education lies in bridging the gap between academic learning and industry needs. Founded with a passion for providing meaningful and immersive learning experiences, we offer internship programs that equip students and young professionals with practical skills in Full Stack Development, Data Science, and Project Management.",
-      gradient: "from-blue-500/20 via-purple-500/20 to-pink-500/20",
-      accentColor: "from-blue-400 to-purple-500",
-      decorativeIcon: <Users className="w-6 h-6" />,
+        "At INLIGHN TECH, we believe that the future of education lies in bridging the gap between academic learning and industry needs. Founded with a passion for providing meaningful and immersive learning experiences.",
+      highlight: "Bridging Education & Industry",
+      stats: { number: "500+", label: "Students" },
     },
     {
       id: 1,
-      icon: <Target className="w-12 h-12 text-white" />,
+      icon: <Target className="w-6 h-6" />,
       title: "Our Mission",
       content:
-        "To empower students and young professionals by providing immersive, real-world learning experiences through tailored internship programs. We aim to equip our participants with the practical skills and confidence they need to succeed in the fast-evolving tech industry.",
-      gradient: "from-pink-500/20 via-red-500/20 to-orange-500/20",
-      accentColor: "from-pink-400 to-red-500",
-      decorativeIcon: <Rocket className="w-6 h-6" />,
+        "To empower students and young professionals by providing immersive, real-world learning experiences through tailored internship programs. We aim to equip our participants with practical skills and confidence.",
+      highlight: "Empowering Through Experience",
+      stats: { number: "95%", label: "Success Rate" },
     },
     {
       id: 2,
-      icon: <Eye className="w-12 h-12 text-white" />,
+      icon: <Eye className="w-6 h-6" />,
       title: "Our Vision",
       content:
-        "To empower students and young professionals by providing immersive, real-world learning experiences through tailored internship programs. We aim to equip our participants with the practical skills and confidence they need to succeed in the fast-evolving tech industry.",
-      gradient: "from-orange-500/20 via-yellow-500/20 to-green-500/20",
-      accentColor: "from-orange-400 to-yellow-500",
-      decorativeIcon: <Award className="w-6 h-6" />,
+        "To become the leading platform for practical tech education, creating a generation of skilled professionals ready to tackle real-world challenges in the fast-evolving technology industry.",
+      highlight: "Future-Ready Professionals",
+      stats: { number: "50+", label: "Partners" },
     },
   ];
 
@@ -55,7 +59,7 @@ const AboutUsCarouselSection = () => {
 
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5000);
+    }, 4000);
 
     return () => clearInterval(interval);
   }, [isAutoPlaying, slides.length]);
@@ -75,100 +79,77 @@ const AboutUsCarouselSection = () => {
     setIsAutoPlaying(false);
   };
 
-  return (
-    <section className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 relative overflow-hidden py-20">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        {/* Gradient Orbs */}
-        <motion.div
-          className="absolute w-96 h-96 rounded-full opacity-10"
-          style={{
-            background: "radial-gradient(circle, #8B5CF6 0%, transparent 70%)",
-            top: "10%",
-            right: "10%",
-          }}
-          animate={{
-            scale: [1, 1.2, 1],
-            rotate: [0, 180, 360],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-        <motion.div
-          className="absolute w-80 h-80 rounded-full opacity-10"
-          style={{
-            background: "radial-gradient(circle, #EC4899 0%, transparent 70%)",
-            bottom: "10%",
-            left: "10%",
-          }}
-          animate={{
-            scale: [1.2, 1, 1.2],
-            rotate: [360, 180, 0],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
+  // Subtle mouse parallax effect
+  const mouseParallaxX =
+    (mousePosition.x -
+      (typeof window !== "undefined" ? window.innerWidth : 0) / 2) *
+    0.002;
+  const mouseParallaxY =
+    (mousePosition.y -
+      (typeof window !== "undefined" ? window.innerHeight : 0) / 2) *
+    0.002;
 
-        {/* Floating Particles */}
-        {[...Array(20)].map((_, i) => (
+  return (
+    <section className="min-h-screen bg-[#f9f4eb] flex items-center relative overflow-hidden">
+      {/* Subtle background elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        {[...Array(6)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-1 h-1 bg-white/20 rounded-full"
+            className="absolute w-1 h-1 bg-black/10 rounded-full"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
+              left: `${20 + Math.random() * 60}%`,
+              top: `${20 + Math.random() * 60}%`,
             }}
             animate={{
-              y: [0, -100, 0],
-              opacity: [0, 1, 0],
-              scale: [0, 1, 0],
+              opacity: [0.1, 0.3, 0.1],
+              scale: [1, 1.2, 1],
             }}
             transition={{
-              duration: 8 + Math.random() * 4,
+              duration: 6 + Math.random() * 4,
               repeat: Infinity,
-              ease: "easeInOut",
-              delay: Math.random() * 8,
+              delay: Math.random() * 3,
             }}
           />
         ))}
-
-        {/* Grid Pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div
-            className="w-full h-full"
-            style={{
-              backgroundImage: `
-                linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
-              `,
-              backgroundSize: "50px 50px",
-            }}
-          />
-        </div>
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-8">
+      <div className="max-w-7xl mx-auto px-8 w-full">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="flex items-center justify-center space-x-2 mb-6"
+          >
+            <div className="w-8 h-px bg-black/30" />
+            <span className="text-black/60 text-sm font-mono tracking-wider uppercase">
+              Know More About Us
+            </span>
+            <div className="w-8 h-px bg-black/30" />
+          </motion.div>
+
           <motion.h2
             initial={{ y: 20, opacity: 0 }}
             whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 tracking-tight"
+            className="text-4xl md:text-5xl lg:text-6xl font-black text-black mb-6 tracking-tight"
+            style={{
+              fontFamily:
+                "Inter, -apple-system, BlinkMacSystemFont, system-ui, sans-serif",
+            }}
           >
-            Know More About{" "}
-            <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-clip-text text-transparent">
+            About{" "}
+            <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 bg-clip-text text-transparent">
               INLIGHN TECH
             </span>
           </motion.h2>
@@ -176,51 +157,50 @@ const AboutUsCarouselSection = () => {
           <motion.p
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.6 }}
-            className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed"
+            className="text-lg text-black/70 max-w-2xl mx-auto leading-relaxed"
           >
             Discover our journey, mission, and vision as we transform education
-            through innovative internship programs
+            through innovative programs
           </motion.p>
         </motion.div>
 
-        {/* Carousel Container */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
-          className="relative max-w-5xl mx-auto"
-        >
-          {/* Main Card */}
-          <div className="relative overflow-hidden rounded-3xl">
-            {/* Glassmorphic Background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-2xl border border-white/20" />
-
-            {/* Dynamic Background Gradient */}
-            <motion.div
-              className={`absolute inset-0 bg-gradient-to-br ${slides[currentSlide].gradient}`}
-              animate={{ opacity: [0.3, 0.5, 0.3] }}
-              transition={{ duration: 3, repeat: Infinity }}
-            />
-
-            <div className="relative z-10 p-8 md:p-12 lg:p-16">
-              <div className="grid lg:grid-cols-2 gap-12 items-center">
-                {/* Content Side */}
+        {/* Main Content Container */}
+        <div className="max-w-6xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Content Side */}
+            <div className="space-y-8">
+              <AnimatePresence mode="wait">
                 <motion.div
                   key={currentSlide}
-                  initial={{ opacity: 0, x: -50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6 }}
+                  initial={{ opacity: 0, x: -30, y: 20 }}
+                  animate={{ opacity: 1, x: 0, y: 0 }}
+                  exit={{ opacity: 0, x: 30, y: -20 }}
+                  transition={{ duration: 0.6, ease: "easeInOut" }}
                   className="space-y-6"
+                  style={{
+                    transform: `translate(${mouseParallaxX}px, ${mouseParallaxY}px)`,
+                  }}
                 >
                   {/* Icon */}
                   <motion.div
                     initial={{ scale: 0, rotate: -180 }}
                     animate={{ scale: 1, rotate: 0 }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
-                    className={`inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-r ${slides[currentSlide].accentColor} shadow-2xl`}
+                    transition={{ duration: 0.6, delay: 0.2, type: "spring" }}
+                    className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-black text-white shadow-lg"
                   >
                     {slides[currentSlide].icon}
+                  </motion.div>
+
+                  {/* Highlight */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: 0.3 }}
+                    className="text-sm font-mono text-black/60 tracking-wider uppercase"
+                  >
+                    {slides[currentSlide].highlight}
                   </motion.div>
 
                   {/* Title */}
@@ -228,7 +208,11 @@ const AboutUsCarouselSection = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.4 }}
-                    className="text-3xl md:text-4xl font-black text-white leading-tight"
+                    className="text-3xl md:text-4xl font-black text-black leading-tight"
+                    style={{
+                      fontFamily:
+                        "Inter, -apple-system, BlinkMacSystemFont, system-ui, sans-serif",
+                    }}
                   >
                     {slides[currentSlide].title}
                   </motion.h3>
@@ -237,18 +221,18 @@ const AboutUsCarouselSection = () => {
                   <motion.p
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.6 }}
-                    className="text-lg text-gray-300 leading-relaxed"
+                    transition={{ duration: 0.6, delay: 0.5 }}
+                    className="text-lg text-black/70 leading-relaxed"
                   >
                     {slides[currentSlide].content}
                   </motion.p>
 
-                  {/* Read More Button */}
+                  {/* Learn More Button */}
                   <motion.button
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.8 }}
-                    className={`group inline-flex items-center gap-3 px-6 py-3 rounded-2xl bg-gradient-to-r ${slides[currentSlide].accentColor} text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300`}
+                    transition={{ duration: 0.6, delay: 0.6 }}
+                    className="group inline-flex items-center gap-3 px-8 py-3 bg-black text-white rounded-full font-medium hover:bg-black/90 transition-all duration-300 shadow-lg"
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.95 }}
                   >
@@ -257,101 +241,171 @@ const AboutUsCarouselSection = () => {
                       animate={{ x: [0, 4, 0] }}
                       transition={{ duration: 1.5, repeat: Infinity }}
                     >
-                      <ChevronRight className="w-4 h-4" />
+                      <ArrowRight className="w-4 h-4" />
                     </motion.div>
                   </motion.button>
                 </motion.div>
+              </AnimatePresence>
+            </div>
 
-                {/* Visual Side */}
+            {/* Visual Side */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="relative"
+              style={{
+                transform: `translate(${-mouseParallaxX}px, ${-mouseParallaxY}px)`,
+              }}
+            >
+              {/* Main Card */}
+              <motion.div
+                className="bg-white/70 backdrop-blur-sm border border-white/50 rounded-3xl p-8 shadow-xl relative overflow-hidden"
+                whileHover={{ y: -5, scale: 1.02 }}
+                transition={{ duration: 0.3 }}
+              >
+                {/* Animated background gradient */}
                 <motion.div
-                  key={`visual-${currentSlide}`}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                  className="relative flex items-center justify-center"
-                >
-                  {/* Decorative Elements */}
-                  <div className="relative">
-                    {/* Central Circle */}
-                    <motion.div
-                      className={`w-64 h-64 rounded-full bg-gradient-to-r ${slides[currentSlide].accentColor} opacity-20 relative`}
-                      animate={{ rotate: 360 }}
-                      transition={{
-                        duration: 20,
-                        repeat: Infinity,
-                        ease: "linear",
-                      }}
-                    >
-                      {/* Orbiting Elements */}
-                      {[...Array(3)].map((_, i) => (
-                        <motion.div
-                          key={i}
-                          className="absolute w-8 h-8 bg-white/20 rounded-full backdrop-blur-sm border border-white/30"
-                          style={{
-                            top: "50%",
-                            left: "50%",
-                            transformOrigin: `${80 + i * 20}px 0`,
-                          }}
-                          animate={{ rotate: -360 }}
-                          transition={{
-                            duration: 15 + i * 5,
-                            repeat: Infinity,
-                            ease: "linear",
-                          }}
-                        />
-                      ))}
-                    </motion.div>
+                  className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-pink-500/5 to-orange-500/5"
+                  animate={{
+                    opacity: [0.3, 0.6, 0.3],
+                  }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                />
 
-                    {/* Central Icon */}
+                <div className="relative z-10">
+                  {/* Main Stat */}
+                  <AnimatePresence mode="wait">
                     <motion.div
-                      className="absolute inset-0 flex items-center justify-center"
-                      animate={{ scale: [1, 1.1, 1] }}
-                      transition={{ duration: 2, repeat: Infinity }}
+                      key={currentSlide}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 1.2 }}
+                      transition={{ duration: 0.5 }}
+                      className="text-center mb-8"
                     >
-                      <div
-                        className={`w-24 h-24 rounded-2xl bg-gradient-to-r ${slides[currentSlide].accentColor} flex items-center justify-center shadow-2xl`}
+                      <motion.div
+                        className="text-5xl font-black text-black mb-2"
+                        animate={{ scale: [1, 1.05, 1] }}
+                        transition={{ duration: 2, repeat: Infinity }}
                       >
-                        {slides[currentSlide].decorativeIcon}
+                        {slides[currentSlide].stats.number}
+                      </motion.div>
+                      <div className="text-sm text-black/60 uppercase tracking-wider">
+                        {slides[currentSlide].stats.label}
                       </div>
                     </motion.div>
+                  </AnimatePresence>
 
-                    {/* Floating Elements */}
-                    {[...Array(6)].map((_, i) => (
+                  {/* Progress Bar */}
+                  <div className="space-y-3 mb-6">
+                    <div className="flex justify-between text-sm text-black/70">
+                      <span>Excellence</span>
+                      <span>95%</span>
+                    </div>
+                    <div className="h-2 bg-black/10 rounded-full overflow-hidden">
                       <motion.div
-                        key={i}
-                        className="absolute w-2 h-2 bg-white/40 rounded-full"
-                        style={{
-                          left: `${20 + Math.random() * 60}%`,
-                          top: `${20 + Math.random() * 60}%`,
-                        }}
-                        animate={{
-                          y: [0, -20, 0],
-                          opacity: [0.4, 1, 0.4],
-                          scale: [1, 1.5, 1],
-                        }}
-                        transition={{
-                          duration: 3 + Math.random() * 2,
-                          repeat: Infinity,
-                          delay: Math.random() * 2,
-                        }}
+                        className="h-full bg-gradient-to-r from-purple-600 to-orange-500 rounded-full"
+                        initial={{ width: 0 }}
+                        whileInView={{ width: "95%" }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 2, delay: 0.5 }}
                       />
-                    ))}
+                    </div>
                   </div>
-                </motion.div>
-              </div>
-            </div>
+
+                  {/* Mini Stats Grid */}
+                  <div className="grid grid-cols-3 gap-4 text-center">
+                    <div>
+                      <div className="text-xl font-bold text-black">4+</div>
+                      <div className="text-xs text-black/60">Years</div>
+                    </div>
+                    <div>
+                      <div className="text-xl font-bold text-black">100%</div>
+                      <div className="text-xs text-black/60">Job Ready</div>
+                    </div>
+                    <div>
+                      <div className="text-xl font-bold text-black">24/7</div>
+                      <div className="text-xs text-black/60">Support</div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Floating elements */}
+              <motion.div
+                className="absolute -top-4 -right-4 w-8 h-8 bg-white/80 rounded-full border border-white/60 flex items-center justify-center shadow-lg"
+                animate={{
+                  y: [0, -8, 0],
+                  rotate: [0, 180, 360],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              >
+                <div className="w-2 h-2 bg-black/40 rounded-full" />
+              </motion.div>
+
+              <motion.div
+                className="absolute -bottom-4 -left-4 w-6 h-6 bg-white/80 rounded-full border border-white/60 shadow-lg"
+                animate={{
+                  scale: [1, 1.2, 1],
+                  opacity: [0.8, 1, 0.8],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 1,
+                }}
+              />
+
+              {/* Subtle orbiting dots */}
+              {[...Array(3)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute w-2 h-2 bg-black/20 rounded-full"
+                  style={{
+                    left: "50%",
+                    top: "50%",
+                    transformOrigin: `${60 + i * 20}px 0`,
+                  }}
+                  animate={{
+                    rotate: 360,
+                  }}
+                  transition={{
+                    duration: 10 + i * 5,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
+                />
+              ))}
+            </motion.div>
           </div>
 
-          {/* Navigation Controls */}
-          <div className="flex items-center justify-between mt-8">
+          {/* Navigation */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.8 }}
+            className="flex items-center justify-center mt-16 space-x-8"
+          >
             {/* Previous Button */}
             <motion.button
               onClick={prevSlide}
-              className="group flex items-center justify-center w-12 h-12 rounded-xl bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 transition-all duration-300"
+              className="flex items-center justify-center w-12 h-12 rounded-full bg-white/70 backdrop-blur-sm border border-white/50 text-black hover:bg-white/90 transition-all duration-300 shadow-lg"
               whileHover={{ scale: 1.1, y: -2 }}
               whileTap={{ scale: 0.9 }}
             >
-              <ChevronLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform duration-300" />
+              <ChevronLeft className="w-5 h-5" />
             </motion.button>
 
             {/* Slide Indicators */}
@@ -361,26 +415,22 @@ const AboutUsCarouselSection = () => {
                   key={index}
                   onClick={() => goToSlide(index)}
                   className={`relative overflow-hidden rounded-full transition-all duration-300 ${
-                    index === currentSlide ? "w-12 h-3" : "w-3 h-3"
+                    index === currentSlide ? "w-10 h-3" : "w-3 h-3"
                   }`}
                   whileHover={{ scale: 1.2 }}
                   whileTap={{ scale: 0.9 }}
                 >
                   <div
                     className={`w-full h-full transition-all duration-300 ${
-                      index === currentSlide
-                        ? `bg-gradient-to-r ${slides[index].accentColor}`
-                        : "bg-white/30"
+                      index === currentSlide ? "bg-black" : "bg-black/30"
                     }`}
                   />
-
-                  {/* Active indicator animation */}
                   {index === currentSlide && (
                     <motion.div
                       className="absolute inset-0 bg-gradient-to-r from-white/30 to-transparent"
                       animate={{ x: ["-100%", "100%"] }}
                       transition={{
-                        duration: 5,
+                        duration: 4,
                         repeat: Infinity,
                         ease: "linear",
                       }}
@@ -393,38 +443,39 @@ const AboutUsCarouselSection = () => {
             {/* Next Button */}
             <motion.button
               onClick={nextSlide}
-              className="group flex items-center justify-center w-12 h-12 rounded-xl bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 transition-all duration-300"
+              className="flex items-center justify-center w-12 h-12 rounded-full bg-white/70 backdrop-blur-sm border border-white/50 text-black hover:bg-white/90 transition-all duration-300 shadow-lg"
               whileHover={{ scale: 1.1, y: -2 }}
               whileTap={{ scale: 0.9 }}
             >
-              <ChevronRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform duration-300" />
+              <ChevronRight className="w-5 h-5" />
             </motion.button>
-          </div>
+          </motion.div>
 
           {/* Auto-play Toggle */}
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            transition={{ delay: 1.2 }}
-            className="flex items-center justify-center mt-6"
+            viewport={{ once: true }}
+            transition={{ delay: 1 }}
+            className="flex items-center justify-center mt-8"
           >
             <motion.button
               onClick={() => setIsAutoPlaying(!isAutoPlaying)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+              className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                 isAutoPlaying
-                  ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white"
-                  : "bg-white/10 text-gray-300 hover:bg-white/20"
-              } backdrop-blur-xl border border-white/20`}
+                  ? "bg-black text-white"
+                  : "bg-white/70 text-black hover:bg-white/90"
+              } backdrop-blur-sm border border-white/50 shadow-lg`}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              {isAutoPlaying ? "Auto-Playing" : "Play Auto"}
+              {isAutoPlaying ? "Auto-Playing" : "Enable Auto-Play"}
             </motion.button>
           </motion.div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
 };
 
-export default AboutUsCarouselSection;
+export default MinimalAboutCarousel;

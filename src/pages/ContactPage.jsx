@@ -167,19 +167,13 @@ const ContactPage = () => {
           <motion.h1
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-6xl md:text-7xl lg:text-8xl font-black text-gray-900 mb-8 tracking-tight leading-none"
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 mb-6 tracking-tight"
           >
-            Get In
-          </motion.h1>
-
-          <motion.h1
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-6xl md:text-7xl lg:text-8xl font-black bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 bg-clip-text text-transparent mb-8 tracking-tight leading-none"
-          >
-            Touch
+            Connect{" "}
+            <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 bg-clip-text text-transparent">
+              With Us
+            </span>
           </motion.h1>
 
           <motion.p
@@ -582,7 +576,6 @@ const ContactPage = () => {
                   </motion.div>
                 ))}
               </div>
-
             </motion.div>
           </div>
         </div>

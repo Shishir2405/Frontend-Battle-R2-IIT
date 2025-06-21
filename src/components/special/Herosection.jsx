@@ -55,7 +55,7 @@ const Timeline = ({ data }) => {
         {data.map((item, index) => (
           <div
             key={index}
-            className="flex justify-start md:pt-10 md:gap-5"
+            className="flex justify-start pt-10 md:pt-40 md:gap-10"
           >
             <div className="sticky flex flex-col md:flex-row z-40 items-center top-40 self-start max-w-xs lg:max-w-sm md:w-full">
               <div className="h-12 absolute left-3 md:left-3 w-12 rounded-full bg-gradient-to-r from-amber-200 to-orange-200 flex items-center justify-center shadow-xl border-4 border-white">
@@ -664,15 +664,15 @@ const ProcessTimeline = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-20"
         >
-          <div className="flex items-center justify-center space-x-3 mb-8">
-            <div className="w-8 h-px bg-black/30" />
-            <span className="decorative-text text-black/60 uppercase">
-              WHATS SPECIAL
-            </span>
-            <div className="w-8 h-px bg-black/30" />
-          </div>
-
-          <h2 className="text-5xl md:text-6xl font-black text-gray-900 mb-2">
+          <motion.span
+            initial={{ scale: 0, rotate: -180 }}
+            whileInView={{ scale: 1, rotate: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="inline-block px-8 py-4 bg-gradient-to-r from-orange-100 to-red-100 text-orange-700 rounded-full text-sm font-bold mb-8 shadow-xl border border-orange-200"
+          >
+            🚀 Your Journey Begins
+          </motion.span>
+          <h2 className="text-5xl md:text-6xl font-black text-gray-900 mb-8">
             Selection{" "}
             <span className="bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
               Excellence
@@ -1233,7 +1233,7 @@ const TestimonialsSection = () => {
 // Main Component
 const InnovativeSpecialSections = () => {
   return (
-    <div className="bg-gradient-to-br from-amber-50/80 to-orange-50/60 min-h-screen pt-8">
+    <div className="bg-gradient-to-br from-amber-50/80 to-orange-50/60 min-h-screen">
       <ProcessTimeline />
       <VideoLearningSection />
       <RewardsSection />
